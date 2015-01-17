@@ -1,6 +1,6 @@
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "0.99.5")
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.0.1")
 
-addSbtPlugin("org.scoverage" %% "sbt-coveralls" % "0.98.0")
+addSbtPlugin("org.scoverage" %% "sbt-coveralls" % "1.0.0.BETA1")
 
 addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "0.2.1")
 
