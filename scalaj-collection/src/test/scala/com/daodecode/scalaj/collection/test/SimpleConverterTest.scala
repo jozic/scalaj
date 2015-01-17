@@ -1,10 +1,11 @@
 package com.daodecode.scalaj.collection.test
 
-import scala.collection.{mutable, immutable}
-import scala.language.{higherKinds, reflectiveCalls}
-
 import com.daodecode.scalaj.collection._
 import org.scalatest.{Matchers, WordSpec}
+
+import scala.collection.generic.CanBuildFrom
+import scala.collection.{immutable, mutable}
+import scala.language.{higherKinds, reflectiveCalls}
 
 class SimpleConverterTest extends WordSpec with Matchers {
 
@@ -13,6 +14,29 @@ class SimpleConverterTest extends WordSpec with Matchers {
     def acceptJListOf[A](jl: JList[A]) = {
       val clazz = jl.getClass
       clazz
+    }
+
+    def checkMutableSeq[MS <: mutable.Seq[Int]](implicit cbf: CanBuildFrom[MS, Int, MS]): Unit = {
+      val mSeq = (cbf() += 2).result()
+      mSeq should be(Seq(2))
+      mSeq.deepAsJava[Int].set(0, 5)
+      mSeq should be(Seq(5))
+    }
+
+    def checkMutableBuffer[MB <: mutable.Buffer[Int]](implicit cbf: CanBuildFrom[MB, Int, MB]): Unit = {
+      val mBuf = (cbf() += 2).result()
+      mBuf should be(mutable.Buffer(2))
+      val jlist = mBuf.deepAsJava[Int]
+      jlist.set(0, 5)
+      mBuf should be(mutable.Buffer(5))
+      jlist.add(10)
+      mBuf should be(mutable.Buffer(5, 10))
+
+    }
+
+    def checkSameInstance[A](scalaBuffer: mutable.Buffer[A]): Unit = {
+      import scala.collection.JavaConverters._
+      scalaBuffer.deepAsJava.asScala should be theSameInstanceAs scalaBuffer
     }
 
     "convert lists of primitives properly" in {
@@ -76,11 +100,14 @@ class SimpleConverterTest extends WordSpec with Matchers {
       acceptJListOf(immutable.Queue(1).deepAsJava)
 
       acceptJListOf(mutable.Seq(1).deepAsJava)
+      acceptJListOf(mutable.IndexedSeq(1).deepAsJava)
+      acceptJListOf(mutable.LinearSeq(1).deepAsJava)
+
       acceptJListOf(mutable.Buffer(1).deepAsJava)
       acceptJListOf(mutable.ArrayBuffer(1).deepAsJava)
       acceptJListOf(mutable.ListBuffer(1).deepAsJava)
-      acceptJListOf(mutable.IndexedSeq(1).deepAsJava)
-      acceptJListOf(mutable.LinearSeq(1).deepAsJava)
+      acceptJListOf(mutable.UnrolledBuffer(1).deepAsJava)
+
       acceptJListOf(mutable.Queue(1).deepAsJava)
       acceptJListOf(mutable.Stack(1).deepAsJava)
       acceptJListOf(mutable.ArrayStack(1).deepAsJava)
@@ -89,14 +116,43 @@ class SimpleConverterTest extends WordSpec with Matchers {
       acceptJListOf(mutable.LinkedList(1).deepAsJava)
       acceptJListOf(mutable.MutableList(1).deepAsJava)
       acceptJListOf(mutable.ResizableArray(1).deepAsJava)
-      acceptJListOf(mutable.UnrolledBuffer(1).deepAsJava)
     }
 
-    "keep mutable lists mutable" in {
+    "keep mutable seqs mutable" in {
+      checkMutableSeq[mutable.Seq[Int]]
+      checkMutableSeq[mutable.ArraySeq[Int]]
+      checkMutableSeq[mutable.LinearSeq[Int]]
+      checkMutableSeq[mutable.IndexedSeq[Int]]
+      checkMutableSeq[mutable.DoubleLinkedList[Int]]
+      checkMutableSeq[mutable.MutableList[Int]]
+      checkMutableSeq[mutable.LinkedList[Int]]
+      checkMutableSeq[mutable.ResizableArray[Int]]
 
-      val mtbl = mutable.Seq(1)
-      mtbl.deepAsJava.add(23)
-      mtbl should be(mutable.Seq(1, 23))
+      checkMutableSeq[mutable.Queue[Int]]
+      checkMutableSeq[mutable.Stack[Int]]
+      checkMutableSeq[mutable.ArrayStack[Int]]
+
+      checkMutableSeq[mutable.Buffer[Int]]
+      checkMutableSeq[mutable.ArrayBuffer[Int]]
+      checkMutableSeq[mutable.ListBuffer[Int]]
+      checkMutableSeq[mutable.UnrolledBuffer[Int]]
+    }
+
+    "keep mutable buffers mutable" in {
+      checkMutableBuffer[mutable.Buffer[Int]]
+      checkMutableBuffer[mutable.ArrayBuffer[Int]]
+      checkMutableBuffer[mutable.ListBuffer[Int]]
+      checkMutableBuffer[mutable.UnrolledBuffer[Int]]
+    }
+
+    "return same scala buffer with primitives and self conversions" in {
+      checkSameInstance(mutable.Buffer(1))
+      checkSameInstance(mutable.ArrayBuffer(1))
+      checkSameInstance(mutable.ListBuffer(1))
+      checkSameInstance(mutable.UnrolledBuffer(1))
+
+      class A
+      checkSameInstance(mutable.Buffer(new A))
     }
   }
 

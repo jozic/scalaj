@@ -20,24 +20,28 @@ package object collection extends DecorateAsJava {
   type JBoolean = java.lang.Boolean
 
 
-  implicit class DeepAsJavaList[A](val scalaSeq: Seq[A]) extends AnyVal {
-
+  implicit class DeepSeqAsJavaList[A](val scalaSeq: Seq[A]) extends AnyVal {
     def deepAsJava[B](implicit converter: Converter[A, B]): JList[B] = converter match {
       case _: CastConverter[_, _] => scalaSeq.asJava.asInstanceOf[JList[B]]
       case _ => scalaSeq.map(converter.convert).asJava
     }
   }
 
-  implicit class DeepAsJavaMutableList[A](val scalaSeq: mutable.Seq[A]) extends AnyVal {
-
+  implicit class DeepMutableSeqAsJavaList[A](val scalaSeq: mutable.Seq[A]) extends AnyVal {
     def deepAsJava[B](implicit converter: Converter[A, B]): JList[B] = converter match {
       case _: CastConverter[_, _] => scalaSeq.asJava.asInstanceOf[JList[B]]
       case _ => scalaSeq.map(converter.convert).asJava
+    }
+  }
+
+  implicit class DeepMutableBufferAsJavaList[A](val scalaBuffer: mutable.Buffer[A]) extends AnyVal {
+    def deepAsJava[B](implicit converter: Converter[A, B]): JList[B] = converter match {
+      case _: CastConverter[_, _] => scalaBuffer.asJava.asInstanceOf[JList[B]]
+      case _ => scalaBuffer.map(converter.convert).asJava
     }
   }
 
   implicit class DeepAsJavaSet[A](val scalaSet: scala.collection.Set[A]) extends AnyVal {
-
     def deepAsJava[B](implicit converter: Converter[A, B]): JSet[B] = converter match {
       case _: CastConverter[_, _] => scalaSet.asJava.asInstanceOf[JSet[B]]
       case _ => scalaSet.map(converter.convert).asJava
@@ -45,7 +49,6 @@ package object collection extends DecorateAsJava {
   }
 
   implicit class DeepAsJavaArray[A](val array: Array[A]) extends AnyVal {
-
     def deepAsJava[B: ClassTag](implicit converter: Converter[A, B]): Array[B] = converter match {
       case _: CastConverter[_, _] => array.asInstanceOf[Array[B]]
       case _ => array.map(converter.convert).toArray
@@ -53,7 +56,6 @@ package object collection extends DecorateAsJava {
   }
 
   implicit class DeepAsJavaMap[A, B](val scalaMap: scala.collection.Map[A, B]) extends AnyVal {
-
     def deepAsJava[C, D](implicit keyConverter: Converter[A, C], valueConverter: Converter[B, D]): JMap[C, D] = (keyConverter, valueConverter) match {
       case (_: CastConverter[_, _], _: CastConverter[_, _]) => scalaMap.asJava.asInstanceOf[JMap[C, D]]
       case _ => scalaMap.map { case (k, v) =>
@@ -61,6 +63,5 @@ package object collection extends DecorateAsJava {
       }.asJava
     }
   }
-
 
 }
