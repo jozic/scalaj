@@ -214,6 +214,18 @@ class SimpleConverterTest extends WordSpec with Matchers {
 
     def acceptJSetOf[A](jl: JSet[A]) = ()
 
+    def checkMutableSet[MS <: mutable.Set[Int]](implicit cbf: CanBuildFrom[MS, Int, MS]): Unit = {
+      val mSet = (cbf() += 2).result()
+      mSet should be(Set(2))
+      mSet.deepAsJava[Int].add(5)
+      mSet should be(Set(2, 5))
+    }
+
+    def checkSameInstance[A](scalaSet: mutable.Set[A]): Unit = {
+      import scala.collection.JavaConverters._
+      scalaSet.deepAsJava.asScala should be theSameInstanceAs scalaSet
+    }
+
     "convert sets of primitives properly" in {
 
       //    acceptJSetOf[JByte](Set[Byte](1, 2, 3)) //doesn't compile
@@ -258,9 +270,10 @@ class SimpleConverterTest extends WordSpec with Matchers {
     "allow custom converters" in {
       implicit val intToString = Converter[Int, String](_ + 1.toString)
       val asJava: JSet[String] = Set(1, 2, 3).deepAsJava
-      asJava.contains("11") should be(true)
-      asJava.contains("21") should be(true)
-      asJava.contains("31") should be(true)
+
+      asJava should contain("11")
+      asJava should contain("21")
+      asJava should contain("31")
     }
 
     "support all Set subclasses" in {
@@ -277,5 +290,25 @@ class SimpleConverterTest extends WordSpec with Matchers {
       acceptJSetOf(mutable.SortedSet(1).deepAsJava)
       acceptJSetOf(mutable.TreeSet(1).deepAsJava)
     }
+
+    "keep mutable sets mutable" in {
+      checkMutableSet[mutable.Set[Int]]
+      checkMutableSet[mutable.HashSet[Int]]
+      checkMutableSet[mutable.BitSet]
+      checkMutableSet[mutable.SortedSet[Int]]
+      checkMutableSet[mutable.TreeSet[Int]]
+    }
+
+    "return same scala set with primitives and self conversions" in {
+      checkSameInstance(mutable.Set(1))
+      checkSameInstance(mutable.HashSet(1))
+      checkSameInstance(mutable.BitSet(1))
+      checkSameInstance(mutable.SortedSet(1))
+      checkSameInstance(mutable.TreeSet(1))
+
+      class A
+      checkSameInstance(mutable.Set(new A))
+    }
+
   }
 }

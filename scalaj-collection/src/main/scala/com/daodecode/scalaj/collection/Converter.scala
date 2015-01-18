@@ -11,12 +11,10 @@ class CastConverter[-A, +B] extends Converter[A, B] {
   override def convert(a: A): B = ???
 }
 
-protected class SelfConverter[A] extends CastConverter[A, A]
-
 trait LowImplicitSelfConverter {
 
   //todo use same trick as in toMap with type constraint
-  object SelfConverter extends SelfConverter[Any]
+  object SelfConverter extends CastConverter[Any, Any]
 
   implicit def selfConverter[A]: Converter[A, A] = SelfConverter.asInstanceOf[Converter[A, A]]
 }
