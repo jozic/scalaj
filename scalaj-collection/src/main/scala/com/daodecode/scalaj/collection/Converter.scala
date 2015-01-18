@@ -8,7 +8,7 @@ trait Converter[-A, +B] {
 }
 
 class CastConverter[-A, +B] extends Converter[A, B] {
-  override def convert(a: A): B = ???
+  override def convert(a: A): B = a.asInstanceOf[B]
 }
 
 trait LowImplicitSelfConverter {

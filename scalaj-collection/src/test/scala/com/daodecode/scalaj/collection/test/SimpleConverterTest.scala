@@ -9,7 +9,7 @@ import scala.language.{higherKinds, reflectiveCalls}
 
 class SimpleConverterTest extends WordSpec with Matchers {
 
-  "SeqConverter" should {
+  "SeqConverters" should {
 
     def acceptJListOf[A](jl: JList[A]) = {
       val clazz = jl.getClass
@@ -34,7 +34,7 @@ class SimpleConverterTest extends WordSpec with Matchers {
 
     }
 
-    def checkSameInstance[A](scalaBuffer: mutable.Buffer[A]): Unit = {
+    def checkSameInstance(scalaBuffer: mutable.Buffer[_]): Unit = {
       import scala.collection.JavaConverters._
       scalaBuffer.deepAsJava.asScala should be theSameInstanceAs scalaBuffer
     }
@@ -156,9 +156,14 @@ class SimpleConverterTest extends WordSpec with Matchers {
     }
   }
 
-  "ArrayConverter" should {
+  "ArrayConverters" should {
 
     def acceptArrayOf[A](jl: Array[A]) = ()
+
+    def checkSameInstance[_](scalaArray: Array[_]): Unit = {
+      scalaArray.deepAsJava should be theSameInstanceAs scalaArray
+    }
+
 
     "convert arrays of primitives properly" in {
 
@@ -208,9 +213,18 @@ class SimpleConverterTest extends WordSpec with Matchers {
       asJava(1) should be("21")
       asJava(2) should be("31")
     }
+
+    "return same array with primitives and self conversions" in {
+      checkSameInstance(Array(1))
+      checkSameInstance(Array('s'))
+      checkSameInstance(Array(12D))
+      class A
+      checkSameInstance(Array(new A))
+    }
+
   }
 
-  "SetConverter" should {
+  "SetConverters" should {
 
     def acceptJSetOf[A](jl: JSet[A]) = ()
 
@@ -221,7 +235,7 @@ class SimpleConverterTest extends WordSpec with Matchers {
       mSet should be(Set(2, 5))
     }
 
-    def checkSameInstance[A](scalaSet: mutable.Set[A]): Unit = {
+    def checkSameInstance[_](scalaSet: mutable.Set[_]): Unit = {
       import scala.collection.JavaConverters._
       scalaSet.deepAsJava.asScala should be theSameInstanceAs scalaSet
     }
@@ -299,7 +313,7 @@ class SimpleConverterTest extends WordSpec with Matchers {
       checkMutableSet[mutable.TreeSet[Int]]
     }
 
-    "return same scala set with primitives and self conversions" in {
+    "return same mutable scala set with primitives and self conversions" in {
       checkSameInstance(mutable.Set(1))
       checkSameInstance(mutable.HashSet(1))
       checkSameInstance(mutable.BitSet(1))
@@ -308,6 +322,99 @@ class SimpleConverterTest extends WordSpec with Matchers {
 
       class A
       checkSameInstance(mutable.Set(new A))
+    }
+
+  }
+
+  "MapConverters" should {
+
+    def acceptJMapOf[A, B](jl: JMap[A, B]) = ()
+
+    def checkMutableMap[MM <: mutable.Map[Int, String]](implicit cbf: CanBuildFrom[MM, (Int, String), MM]): Unit = {
+      val mMap = (cbf() += 2 -> "two").result()
+      mMap should be(Map(2 -> "two"))
+      mMap.deepAsJava.put(5, "five")
+      mMap should be(Map(2 -> "two", 5 -> "five"))
+    }
+
+    def checkSameInstance(scalaMap: mutable.Map[_, _]): Unit = {
+      import scala.collection.JavaConverters._
+      scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
+    }
+
+    "convert maps of primitives properly" in {
+      // acceptJMapOf[JByte, JInt](Map[Byte, Int]((1: Byte) -> 2) //doesn't compile
+      // acceptJMapOf[JByte, JInt](Map[Byte, Int]((1: Byte) -> 2).asJava) // doesn't compile
+      acceptJMapOf[JByte, JInt](Map[Byte, Int]((1: Byte) -> 2).deepAsJava)
+
+      // acceptJMapOf[JShort, JLong](Map[Short, Long]((1: Short) -> 2L) //doesn't compile
+      // acceptJMapOf[JShort, JLong](Map[Short, Long]((1: Short) -> 2L).asJava // doesn't compile
+      acceptJMapOf[JShort, JLong](Map[Short, Long]((1: Short) -> 2L).deepAsJava)
+
+      // acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D) //doesn't compile
+      // acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D).asJava // doesn't compile
+      acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D).deepAsJava)
+
+      // acceptJMapOf[JBoolean, JChar](Map[Boolean, Char](true -> 't') //doesn't compile
+      // acceptJMapOf[JBoolean, JChar](Map[Boolean, Char](true -> 't').asJava // doesn't compile
+      acceptJMapOf[JBoolean, JChar](Map[Boolean, Char](true -> 't').deepAsJava)
+    }
+
+    "convert maps of non-primitives properly" in {
+      case class Boo(i: Int)
+      acceptJMapOf[Boo, String](Map(Boo(3) -> "3", Boo(5) -> "5").asJava)
+      acceptJMapOf[Boo, String](Map(Boo(3) -> "3", Boo(5) -> "5").deepAsJava)
+    }
+
+    "allow custom converters" in {
+      implicit val intToString = Converter[Int, String](_ + 1.toString)
+      val asJava: JMap[String, String] = Map("one" -> 1, "two" -> 2, "three" -> 3).deepAsJava
+
+      asJava.get("one") should be("11")
+      asJava.get("two") should be("21")
+      asJava.get("three") should be("31")
+    }
+
+    "support all Map subclasses" in {
+      acceptJMapOf(immutable.Map(1 -> "one").deepAsJava)
+      acceptJMapOf(immutable.HashMap(1 -> "one").deepAsJava)
+      acceptJMapOf(immutable.TreeMap(1 -> "one").deepAsJava)
+      acceptJMapOf(immutable.SortedMap(1L -> "one").deepAsJava)
+      acceptJMapOf(immutable.IntMap(1 -> "one").deepAsJava)
+      acceptJMapOf(immutable.LongMap(1L -> "one").deepAsJava)
+      acceptJMapOf(immutable.ListMap(1L -> "one").deepAsJava)
+
+      acceptJMapOf(mutable.Map(1 -> "one").deepAsJava)
+      acceptJMapOf(mutable.HashMap(1 -> "one").deepAsJava)
+      acceptJMapOf(mutable.ListMap(1L -> "one").deepAsJava)
+      acceptJMapOf(mutable.LinkedHashMap(1L -> "one").deepAsJava)
+      acceptJMapOf(mutable.OpenHashMap(1L -> "one").deepAsJava)
+      acceptJMapOf(mutable.WeakHashMap(1L -> "one").deepAsJava)
+    }
+
+    "keep mutable maps mutable" in {
+      checkMutableMap[mutable.Map[Int, String]]
+      checkMutableMap[mutable.HashMap[Int, String]]
+      checkMutableMap[mutable.ListMap[Int, String]]
+      checkMutableMap[mutable.LinkedHashMap[Int, String]]
+      checkMutableMap[mutable.WeakHashMap[Int, String]]
+
+      //OpenHashMap doesn't provide CanBuildFrom
+      val openHashMap: mutable.OpenHashMap[Int, String] = mutable.OpenHashMap(1 -> "one")
+      openHashMap.deepAsJava.put(2, "two")
+      openHashMap should be(mutable.OpenHashMap(1 -> "one", 2 -> "two"))
+    }
+
+    "return same mutable scala map with primitives and self conversions" in {
+      checkSameInstance(mutable.Map(1 -> "one"))
+      checkSameInstance(mutable.HashMap(1 -> "one"))
+      checkSameInstance(mutable.ListMap(1 -> "one"))
+      checkSameInstance(mutable.LinkedHashMap(1 -> "one"))
+      checkSameInstance(mutable.OpenHashMap(1 -> "one"))
+      //      checkSameInstance(mutable.WeakHashMap(1 -> "one")) // doesn't hold for WeakHashMap, as it's a wrapper itself
+
+      class A
+      checkSameInstance(mutable.Map(new A -> "a"))
     }
 
   }
