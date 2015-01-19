@@ -19,6 +19,8 @@ package object collection extends DecorateAsJava with DecorateAsScala {
   type JChar = java.lang.Character
   type JBoolean = java.lang.Boolean
 
+  /** deepAsJava converters **/
+
   implicit class DeepMutableBufferAsJavaList[A](val scalaBuffer: MBuffer[A]) extends AnyVal {
     def deepAsJava[B](implicit converter: JConverter[A, B]): JList[B] = converter match {
       case _: JCastConverter[_, _] => scalaBuffer.asJava.asInstanceOf[JList[B]]
@@ -79,10 +81,20 @@ package object collection extends DecorateAsJava with DecorateAsScala {
     }
   }
 
+
+  /** deepAsScala converters **/
+
   implicit class DeepJavaListAsMutableBuffer[A](val javaList: JList[A]) extends AnyVal {
     def deepAsScala[B](implicit converter: SConverter[A, B]): MBuffer[B] = converter match {
       case _: SCastConverter[_, _] => javaList.asScala.asInstanceOf[MBuffer[B]]
       case _ => javaList.asScala.map(converter.convert)
+    }
+  }
+
+  implicit class DeepJavaSetAsMutableSet[A](val javaSet: JSet[A]) extends AnyVal {
+    def deepAsScala[B](implicit converter: SConverter[A, B]): MSet[B] = converter match {
+      case _: SCastConverter[_, _] => javaSet.asScala.asInstanceOf[MSet[B]]
+      case _ => javaSet.asScala.map(converter.convert)
     }
   }
 

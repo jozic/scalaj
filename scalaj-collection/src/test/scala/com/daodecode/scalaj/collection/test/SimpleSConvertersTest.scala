@@ -6,10 +6,14 @@ import java.util.Arrays.asList
 import com.daodecode.scalaj.collection._
 import org.scalatest.{Matchers, WordSpec}
 
-import scala.collection.mutable.{Buffer => MBuffer}
+import scala.collection.mutable.{Buffer => MBuffer, Set => MSet}
+import scala.language.higherKinds
 import scala.reflect.ClassTag
 
 class SimpleSConvertersTest extends WordSpec with Matchers {
+
+  private def newInstance[JC: ClassTag] =
+    implicitly[ClassTag[JC]].runtimeClass.newInstance().asInstanceOf[JC]
 
   "JListConverters" should {
 
@@ -19,7 +23,7 @@ class SimpleSConvertersTest extends WordSpec with Matchers {
     }
 
     def checkMutableBuffer[JL <: JList[Int] : ClassTag](): Unit = {
-      val jList = implicitly[ClassTag[JL]].runtimeClass.newInstance().asInstanceOf[JL]
+      val jList = newInstance[JL]
 
       jList.add(2)
 
@@ -29,7 +33,6 @@ class SimpleSConvertersTest extends WordSpec with Matchers {
     }
 
     def checkSameInstance(javaList: JList[_]): Unit = {
-      import scala.collection.JavaConverters._
       javaList.deepAsScala.asJava should be theSameInstanceAs javaList
     }
 
@@ -58,7 +61,7 @@ class SimpleSConvertersTest extends WordSpec with Matchers {
       asScala(2) should be("31")
     }
 
-    "support all JList subclasses" in {
+    "support all standard JList subclasses" in {
       acceptBufferOf(new util.ArrayList[JLong]().deepAsScala)
       acceptBufferOf(new util.LinkedList[JLong]().deepAsScala)
     }
@@ -75,5 +78,79 @@ class SimpleSConvertersTest extends WordSpec with Matchers {
       class A
       checkSameInstance(new util.ArrayList[A]())
     }
+  }
+
+  "JSetConverters" should {
+
+    def setOf[A, JS <: JSet[A]](as: A*)(implicit ct: ClassTag[JS]): JS = {
+      val set: JS = ct.runtimeClass.newInstance().asInstanceOf[JS]
+      as.foreach(set.add)
+      set
+    }
+
+    def JSet[A](as: A*): JSet[A] = setOf[A, util.HashSet[A]](as: _*)
+
+    def acceptMSetOf[A](ms: MSet[A]) = ()
+
+    def checkMutableSet[JS <: JSet[Int] : ClassTag](): Unit = {
+      val mSet = newInstance[JS]
+      mSet.add(2)
+      mSet should be(JSet(2))
+
+      mSet.deepAsScala += 5
+      mSet should be(JSet(2, 5))
+    }
+
+    def checkSameInstance(javaSet: JSet[_]): Unit = {
+      javaSet.deepAsScala.asJava should be theSameInstanceAs javaSet
+    }
+
+    "convert sets of primitives properly" in {
+      acceptMSetOf[Byte](JSet[JByte](jb(1), jb(2), jb(3)).deepAsScala)
+      acceptMSetOf[Short](JSet[JShort](js(1), js(2), js(3)).deepAsScala)
+      acceptMSetOf[Int](JSet(1, 2, 3).deepAsScala)
+      acceptMSetOf[Long](JSet(1L, 2L, 3L).deepAsScala)
+      acceptMSetOf[Float](JSet(1F, 2F, 3F).deepAsScala)
+      acceptMSetOf[Double](JSet(1D, 2D, 3D).deepAsScala)
+      acceptMSetOf[Char](JSet('a', 'b').deepAsScala)
+      acceptMSetOf[Boolean](JSet(true, false).deepAsScala)
+    }
+
+    "convert sets of non-primitives properly" in {
+      case class Boo(i: Int)
+      acceptMSetOf[Boo](JSet(Boo(3), Boo(5)).asScala)
+      acceptMSetOf[Boo](JSet(Boo(3), Boo(5)).deepAsScala)
+    }
+
+    "allow custom converters" in {
+      implicit val intToString = SConverter[Int, String](_ + 1.toString)
+      val asScala: MSet[String] = JSet(1, 2, 3).deepAsScala
+
+      asScala should contain("11")
+      asScala should contain("21")
+      asScala should contain("31")
+    }
+
+    "support all standard JSet subclasses" in {
+      acceptMSetOf(new util.HashSet[JInt]().deepAsScala)
+      acceptMSetOf(new util.TreeSet[JInt]().deepAsScala)
+      acceptMSetOf(new util.LinkedHashSet[JInt]().deepAsScala)
+    }
+
+    "keep sets mutable" in {
+      checkMutableSet[util.HashSet[Int]]()
+      checkMutableSet[util.TreeSet[Int]]()
+      checkMutableSet[util.LinkedHashSet[Int]]()
+    }
+
+    "return same java set with primitives and self conversions" in {
+      checkSameInstance(setOf[JInt, util.HashSet[JInt]](1, 2))
+      checkSameInstance(setOf[JInt, util.TreeSet[JInt]](1, 2))
+      checkSameInstance(setOf[JInt, util.LinkedHashSet[JInt]](1, 2))
+
+      class A
+      checkSameInstance(setOf[A, util.HashSet[A]](new A))
+    }
+
   }
 }

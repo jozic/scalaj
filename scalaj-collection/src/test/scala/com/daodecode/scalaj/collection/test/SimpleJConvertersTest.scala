@@ -35,7 +35,6 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     def checkSameInstance(scalaBuffer: mutable.Buffer[_]): Unit = {
-      import scala.collection.JavaConverters._
       scalaBuffer.deepAsJava.asScala should be theSameInstanceAs scalaBuffer
     }
 
@@ -160,7 +159,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
     def acceptArrayOf[A](jl: Array[A]) = ()
 
-    def checkSameInstance[_](scalaArray: Array[_]): Unit = {
+    def checkSameInstance(scalaArray: Array[_]): Unit = {
       scalaArray.deepAsJava should be theSameInstanceAs scalaArray
     }
 
@@ -235,8 +234,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
       mSet should be(Set(2, 5))
     }
 
-    def checkSameInstance[_](scalaSet: mutable.Set[_]): Unit = {
-      import scala.collection.JavaConverters._
+    def checkSameInstance(scalaSet: mutable.Set[_]): Unit = {
       scalaSet.deepAsJava.asScala should be theSameInstanceAs scalaSet
     }
 
@@ -338,7 +336,6 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     def checkSameInstance(scalaMap: mutable.Map[_, _]): Unit = {
-      import scala.collection.JavaConverters._
       scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
     }
 
