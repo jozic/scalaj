@@ -7,7 +7,7 @@ import scala.collection.generic.CanBuildFrom
 import scala.collection.{immutable, mutable}
 import scala.language.{higherKinds, reflectiveCalls}
 
-class SimpleConverterTest extends WordSpec with Matchers {
+class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "SeqConverters" should {
 
@@ -81,7 +81,7 @@ class SimpleConverterTest extends WordSpec with Matchers {
     }
 
     "allow custom converters" in {
-      implicit val intToString = Converter[Int, String](_ + 1.toString)
+      implicit val intToString = JConverter[Int, String](_ + 1.toString)
       val asJava: JList[String] = List(1, 2, 3).deepAsJava
       asJava.get(0) should be("11")
       asJava.get(1) should be("21")
@@ -207,7 +207,7 @@ class SimpleConverterTest extends WordSpec with Matchers {
     }
 
     "allow custom converters" in {
-      implicit val intToString = Converter[Int, String](_ + 1.toString)
+      implicit val intToString = JConverter[Int, String](_ + 1.toString)
       val asJava: Array[String] = Array(1, 2, 3).deepAsJava
       asJava(0) should be("11")
       asJava(1) should be("21")
@@ -282,7 +282,7 @@ class SimpleConverterTest extends WordSpec with Matchers {
     }
 
     "allow custom converters" in {
-      implicit val intToString = Converter[Int, String](_ + 1.toString)
+      implicit val intToString = JConverter[Int, String](_ + 1.toString)
       val asJava: JSet[String] = Set(1, 2, 3).deepAsJava
 
       asJava should contain("11")
@@ -367,7 +367,7 @@ class SimpleConverterTest extends WordSpec with Matchers {
     }
 
     "allow custom converters" in {
-      implicit val intToString = Converter[Int, String](_ + 1.toString)
+      implicit val intToString = JConverter[Int, String](_ + 1.toString)
       val asJava: JMap[String, String] = Map("one" -> 1, "two" -> 2, "three" -> 3).deepAsJava
 
       asJava.get("one") should be("11")

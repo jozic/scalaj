@@ -1,10 +1,10 @@
 package com.daodecode.scalaj
 
-import scala.collection.convert.DecorateAsJava
-import scala.collection.mutable
+import scala.collection.convert.{DecorateAsJava, DecorateAsScala}
+import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Seq => MSeq, Set => MSet}
 import scala.reflect.ClassTag
 
-package object collection extends DecorateAsJava {
+package object collection extends DecorateAsJava with DecorateAsScala {
 
   type JList[A] = java.util.List[A]
   type JSet[A] = java.util.Set[A]
@@ -19,64 +19,70 @@ package object collection extends DecorateAsJava {
   type JChar = java.lang.Character
   type JBoolean = java.lang.Boolean
 
-
-  implicit class DeepSeqAsJavaList[A](val scalaSeq: Seq[A]) extends AnyVal {
-    def deepAsJava[B](implicit converter: Converter[A, B]): JList[B] = converter match {
-      case _: CastConverter[_, _] => scalaSeq.asJava.asInstanceOf[JList[B]]
-      case _ => scalaSeq.map(converter.convert).asJava
-    }
-  }
-
-  implicit class DeepMutableSeqAsJavaList[A](val scalaSeq: mutable.Seq[A]) extends AnyVal {
-    def deepAsJava[B](implicit converter: Converter[A, B]): JList[B] = converter match {
-      case _: CastConverter[_, _] => scalaSeq.asJava.asInstanceOf[JList[B]]
-      case _ => scalaSeq.map(converter.convert).asJava
-    }
-  }
-
-  implicit class DeepMutableBufferAsJavaList[A](val scalaBuffer: mutable.Buffer[A]) extends AnyVal {
-    def deepAsJava[B](implicit converter: Converter[A, B]): JList[B] = converter match {
-      case _: CastConverter[_, _] => scalaBuffer.asJava.asInstanceOf[JList[B]]
+  implicit class DeepMutableBufferAsJavaList[A](val scalaBuffer: MBuffer[A]) extends AnyVal {
+    def deepAsJava[B](implicit converter: JConverter[A, B]): JList[B] = converter match {
+      case _: JCastConverter[_, _] => scalaBuffer.asJava.asInstanceOf[JList[B]]
       case _ => scalaBuffer.map(converter.convert).asJava
     }
   }
 
+  implicit class DeepMutableSeqAsJavaList[A](val scalaSeq: MSeq[A]) extends AnyVal {
+    def deepAsJava[B](implicit converter: JConverter[A, B]): JList[B] = converter match {
+      case _: JCastConverter[_, _] => scalaSeq.asJava.asInstanceOf[JList[B]]
+      case _ => scalaSeq.map(converter.convert).asJava
+    }
+  }
+
+  implicit class DeepSeqAsJavaList[A](val scalaSeq: Seq[A]) extends AnyVal {
+    def deepAsJava[B](implicit converter: JConverter[A, B]): JList[B] = converter match {
+      case _: JCastConverter[_, _] => scalaSeq.asJava.asInstanceOf[JList[B]]
+      case _ => scalaSeq.map(converter.convert).asJava
+    }
+  }
+
   implicit class DeepSetAsJavaSet[A](val scalaSet: scala.collection.Set[A]) extends AnyVal {
-    def deepAsJava[B](implicit converter: Converter[A, B]): JSet[B] = converter match {
-      case _: CastConverter[_, _] => scalaSet.asJava.asInstanceOf[JSet[B]]
+    def deepAsJava[B](implicit converter: JConverter[A, B]): JSet[B] = converter match {
+      case _: JCastConverter[_, _] => scalaSet.asJava.asInstanceOf[JSet[B]]
       case _ => scalaSet.map(converter.convert).asJava
     }
   }
 
-  implicit class DeepMutableSetAsJavaSet[A](val scalaSet: mutable.Set[A]) extends AnyVal {
-    def deepAsJava[B](implicit converter: Converter[A, B]): JSet[B] = converter match {
-      case _: CastConverter[_, _] => scalaSet.asJava.asInstanceOf[JSet[B]]
+  implicit class DeepMutableSetAsJavaSet[A](val scalaSet: MSet[A]) extends AnyVal {
+    def deepAsJava[B](implicit converter: JConverter[A, B]): JSet[B] = converter match {
+      case _: JCastConverter[_, _] => scalaSet.asJava.asInstanceOf[JSet[B]]
       case _ => scalaSet.map(converter.convert).asJava
     }
   }
 
   implicit class DeepArrayAsJavaArray[A](val array: Array[A]) extends AnyVal {
-    def deepAsJava[B: ClassTag](implicit converter: Converter[A, B]): Array[B] = converter match {
-      case _: CastConverter[_, _] => array.asInstanceOf[Array[B]]
+    def deepAsJava[B: ClassTag](implicit converter: JConverter[A, B]): Array[B] = converter match {
+      case _: JCastConverter[_, _] => array.asInstanceOf[Array[B]]
       case _ => array.map(converter.convert).toArray
     }
   }
 
   implicit class DeepMapAsJavaMap[A, B](val scalaMap: scala.collection.Map[A, B]) extends AnyVal {
-    def deepAsJava[C, D](implicit keyConverter: Converter[A, C], valueConverter: Converter[B, D]): JMap[C, D] = (keyConverter, valueConverter) match {
-      case (_: CastConverter[_, _], _: CastConverter[_, _]) => scalaMap.asJava.asInstanceOf[JMap[C, D]]
+    def deepAsJava[C, D](implicit keyConverter: JConverter[A, C], valueConverter: JConverter[B, D]): JMap[C, D] = (keyConverter, valueConverter) match {
+      case (_: JCastConverter[_, _], _: JCastConverter[_, _]) => scalaMap.asJava.asInstanceOf[JMap[C, D]]
       case _ => scalaMap.map { case (k, v) =>
         keyConverter.convert(k) -> valueConverter.convert(v)
       }.asJava
     }
   }
 
-  implicit class DeepMutableMapAsJavaMap[A, B](val scalaMap: mutable.Map[A, B]) extends AnyVal {
-    def deepAsJava[C, D](implicit keyConverter: Converter[A, C], valueConverter: Converter[B, D]): JMap[C, D] = (keyConverter, valueConverter) match {
-      case (_: CastConverter[_, _], _: CastConverter[_, _]) => scalaMap.asJava.asInstanceOf[JMap[C, D]]
+  implicit class DeepMutableMapAsJavaMap[A, B](val scalaMap: MMap[A, B]) extends AnyVal {
+    def deepAsJava[C, D](implicit keyConverter: JConverter[A, C], valueConverter: JConverter[B, D]): JMap[C, D] = (keyConverter, valueConverter) match {
+      case (_: JCastConverter[_, _], _: JCastConverter[_, _]) => scalaMap.asJava.asInstanceOf[JMap[C, D]]
       case _ => scalaMap.map { case (k, v) =>
         keyConverter.convert(k) -> valueConverter.convert(v)
       }.asJava
+    }
+  }
+
+  implicit class DeepJavaListAsMutableBuffer[A](val javaList: JList[A]) extends AnyVal {
+    def deepAsScala[B](implicit converter: SConverter[A, B]): MBuffer[B] = converter match {
+      case _: SCastConverter[_, _] => javaList.asScala.asInstanceOf[MBuffer[B]]
+      case _ => javaList.asScala.map(converter.convert)
     }
   }
 
