@@ -22,6 +22,12 @@ class ComplexJConverterTest extends WordSpec with Matchers {
       Array(Set(List(false))).deepAsJava: Array[JSet[JList[JBoolean]]]
 
       Set(List(Array('a'))).deepAsJava: JSet[JList[Array[JChar]]]
+
+      Set(Map(1 -> 'a')).deepAsJava: JSet[JMap[JInt, JChar]]
+
+      Map("set1" -> Set(23, 24)).deepAsJava: JMap[String, JSet[JInt]]
+
+      Map("set1" -> Set(23, 24)).deepAsJava: JMap[String, JSet[JInt]]
     }
 
     "keep nested mutable collections as mutable" in {

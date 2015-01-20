@@ -157,7 +157,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "ArrayConverters" should {
 
-    def acceptArrayOf[A](jl: Array[A]) = ()
+    def acceptArrayOf[A](ar: Array[A]) = ()
 
     def checkSameInstance(scalaArray: Array[_]): Unit = {
       scalaArray.deepAsJava should be theSameInstanceAs scalaArray
@@ -225,7 +225,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "SetConverters" should {
 
-    def acceptJSetOf[A](jl: JSet[A]) = ()
+    def acceptJSetOf[A](js: JSet[A]) = ()
 
     def checkMutableSet[MS <: mutable.Set[Int]](implicit cbf: CanBuildFrom[MS, Int, MS]): Unit = {
       val mSet = (cbf() += 2).result()
@@ -326,7 +326,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "MapConverters" should {
 
-    def acceptJMapOf[A, B](jl: JMap[A, B]) = ()
+    def acceptJMapOf[A, B](jm: JMap[A, B]) = ()
 
     def checkMutableMap[MM <: mutable.Map[Int, String]](implicit cbf: CanBuildFrom[MM, (Int, String), MM]): Unit = {
       val mMap = (cbf() += 2 -> "two").result()

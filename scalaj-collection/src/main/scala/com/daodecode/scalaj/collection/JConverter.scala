@@ -56,4 +56,8 @@ object JConverter extends LowImplicitSelfJConverter {
 
   implicit def arrayConverter[A, B: ClassTag](implicit converter: JConverter[A, B]): JConverter[Array[A], Array[B]] =
     JConverter[Array[A], Array[B]](_.deepAsJava[B])
+
+  implicit def mapConverter[A, B, C, D](implicit keyConverter: JConverter[A, C],
+                                        valueConverter: JConverter[B, D]): JConverter[Map[A, B], JMap[C, D]] =
+    JConverter[Map[A, B], JMap[C, D]](_.deepAsJava[C, D])
 }
