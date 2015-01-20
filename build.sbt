@@ -14,13 +14,8 @@ val settings = Seq(
   libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.2" % "test"
 )
 
-lazy val scalaj = project.in( file(".") ).aggregate(`scalaj-collection`, `scalaj-google-optional`)
+lazy val scalaj = project.in(file(".")).aggregate(`scalaj-collection`, `scalaj-google-optional`)
 
 lazy val `scalaj-collection` = project.settings(settings: _*)
 
-lazy val `scalaj-google-optional` = project.dependsOn(`scalaj-collection`)
-
-initialCommands in console := """
-  import com.daodecode.scalaj.collection._
-  import com.daodecode.scalaj.googleoptional._
-                              """
+lazy val `scalaj-google-optional` = project.settings(settings: _*).dependsOn(`scalaj-collection`)
