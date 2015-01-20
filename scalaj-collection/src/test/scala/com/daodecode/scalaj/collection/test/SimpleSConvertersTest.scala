@@ -3,12 +3,12 @@ package com.daodecode.scalaj.collection.test
 import java.util
 import java.util.Arrays.asList
 
-import com.daodecode.scalaj.collection._
-import org.scalatest.{Matchers, WordSpec}
-
-import scala.collection.mutable.{Buffer => MBuffer, Set => MSet}
+import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Set => MSet}
 import scala.language.higherKinds
 import scala.reflect.ClassTag
+
+import com.daodecode.scalaj.collection._
+import org.scalatest.{Matchers, WordSpec}
 
 class SimpleSConvertersTest extends WordSpec with Matchers {
 
@@ -17,19 +17,25 @@ class SimpleSConvertersTest extends WordSpec with Matchers {
 
   "JListConverters" should {
 
+    def listOf[A, JL <: JList[A] : ClassTag](as: A*): JL = {
+      val list = newInstance[JL]
+      as.foreach(list.add)
+      list
+    }
+
+    def JList[A](as: A*) = listOf[A, util.ArrayList[A]](as: _*)
+
     def acceptBufferOf[A](sb: MBuffer[A]) = {
       val clazz = sb.getClass
       clazz
     }
 
     def checkMutableBuffer[JL <: JList[Int] : ClassTag](): Unit = {
-      val jList = newInstance[JL]
+      val jList: JL = listOf(2)
+      jList should be(JList(2))
 
-      jList.add(2)
-
-      jList.toArray should be(Array(2))
       jList.deepAsScala += 5
-      jList.toArray should be(Array(2, 5))
+      jList should be(JList(2, 5))
     }
 
     def checkSameInstance(javaList: JList[_]): Unit = {
@@ -82,8 +88,8 @@ class SimpleSConvertersTest extends WordSpec with Matchers {
 
   "JSetConverters" should {
 
-    def setOf[A, JS <: JSet[A]](as: A*)(implicit ct: ClassTag[JS]): JS = {
-      val set: JS = ct.runtimeClass.newInstance().asInstanceOf[JS]
+    def setOf[A, JS <: JSet[A] : ClassTag](as: A*): JS = {
+      val set = newInstance[JS]
       as.foreach(set.add)
       set
     }
@@ -93,8 +99,7 @@ class SimpleSConvertersTest extends WordSpec with Matchers {
     def acceptMSetOf[A](ms: MSet[A]) = ()
 
     def checkMutableSet[JS <: JSet[Int] : ClassTag](): Unit = {
-      val mSet = newInstance[JS]
-      mSet.add(2)
+      val mSet: JS = setOf(2)
       mSet should be(JSet(2))
 
       mSet.deepAsScala += 5
@@ -153,4 +158,80 @@ class SimpleSConvertersTest extends WordSpec with Matchers {
     }
 
   }
+
+  "JMapConverters" should {
+
+    def mapOf[A, B, JM <: JMap[A, B] : ClassTag](pairs: (A, B)*): JM = {
+      val jm = newInstance[JM]
+      pairs.foreach { case (k, v) => jm.put(k, v)}
+      jm
+    }
+
+    def JMap[A, B](pairs: (A, B)*): JMap[A, B] = mapOf[A, B, util.HashMap[A, B]](pairs: _*)
+
+    def acceptMMapOf[A, B](sm: MMap[A, B]) = ()
+
+    def checkMutableMap[JM <: JMap[Int, String] : ClassTag](): Unit = {
+      val jMap = mapOf[Int, String, JM](2 -> "two")
+      jMap should be(JMap(2 -> "two"))
+
+      jMap.deepAsScala update(5, "five")
+      jMap should be(JMap(2 -> "two", 5 -> "five"))
+    }
+
+    def checkSameInstance(javaMap: JMap[_, _]): Unit = {
+      javaMap.deepAsScala.asJava should be theSameInstanceAs javaMap
+    }
+
+    "convert maps of primitives properly" in {
+      acceptMMapOf[Byte, Int](JMap[JByte, JInt](jb(1) -> 2).deepAsScala)
+      acceptMMapOf[Short, Long](JMap[JShort, JLong](js(1) -> 2L).deepAsScala)
+      acceptMMapOf[Float, Double](JMap[JFloat, JDouble]((1F: JFloat) -> (2D: JDouble)).deepAsScala)
+      acceptMMapOf[Boolean, Char](JMap[JBoolean, JChar]((true: JBoolean) -> ('t': JChar)).deepAsScala)
+    }
+
+    "convert maps of non-primitives properly" in {
+      case class Boo(i: Int)
+      acceptMMapOf[Boo, String](JMap(Boo(3) -> "3", Boo(5) -> "5").asScala)
+      acceptMMapOf[Boo, String](JMap(Boo(3) -> "3", Boo(5) -> "5").deepAsScala)
+    }
+
+    "allow custom converters" in {
+      implicit val intToString = SConverter[Int, String](_ + 1.toString)
+      val asScala: MMap[String, String] = JMap[String, Int]("one" -> 1, "two" -> 2, "three" -> 3).deepAsScala
+
+      asScala("one") should be("11")
+      asScala("two") should be("21")
+      asScala("three") should be("31")
+    }
+
+    "support all standard Map subclasses" in {
+      acceptMMapOf(new util.HashMap[JInt, String]().deepAsScala)
+      acceptMMapOf(new util.IdentityHashMap[JInt, String]().deepAsScala)
+      acceptMMapOf(new util.LinkedHashMap[JInt, String]().deepAsScala)
+      acceptMMapOf(new util.TreeMap[JInt, String]().deepAsScala)
+      acceptMMapOf(new util.WeakHashMap[JInt, String]().deepAsScala)
+    }
+
+    "keep mutable maps mutable" in {
+      checkMutableMap[util.HashMap[Int, String]]()
+      checkMutableMap[util.IdentityHashMap[Int, String]]()
+      checkMutableMap[util.LinkedHashMap[Int, String]]()
+      checkMutableMap[util.TreeMap[Int, String]]()
+      checkMutableMap[util.WeakHashMap[Int, String]]()
+    }
+
+    "return same mutable scala map with primitives and self conversions" in {
+      checkSameInstance(mapOf[Int, String, util.HashMap[Int, String]](1 -> "one"))
+      checkSameInstance(mapOf[Int, String, util.IdentityHashMap[Int, String]](1 -> "one"))
+      checkSameInstance(mapOf[Int, String, util.LinkedHashMap[Int, String]](1 -> "one"))
+      checkSameInstance(mapOf[Int, String, util.TreeMap[Int, String]](1 -> "one"))
+      checkSameInstance(mapOf[Int, String, util.WeakHashMap[Int, String]](1 -> "one"))
+
+      class A
+      checkSameInstance(mapOf[A, String, util.HashMap[A, String]](new A -> "a"))
+    }
+
+  }
+
 }

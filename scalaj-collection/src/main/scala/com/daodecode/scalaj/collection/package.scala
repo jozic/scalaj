@@ -98,4 +98,13 @@ package object collection extends DecorateAsJava with DecorateAsScala {
     }
   }
 
+  implicit class DeepJavaMapAsMutableMap[A, B](val javaMap: JMap[A, B]) extends AnyVal {
+    def deepAsScala[C, D](implicit keyConverter: SConverter[A, C], valueConverter: SConverter[B, D]): MMap[C, D] = (keyConverter, valueConverter) match {
+      case (_: SCastConverter[_, _], _: SCastConverter[_, _]) => javaMap.asScala.asInstanceOf[MMap[C, D]]
+      case _ => javaMap.asScala.map { case (k, v) =>
+        keyConverter.convert(k) -> valueConverter.convert(v)
+      }
+    }
+  }
+
 }
