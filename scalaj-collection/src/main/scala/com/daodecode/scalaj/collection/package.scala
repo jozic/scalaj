@@ -98,6 +98,13 @@ package object collection extends DecorateAsJava with DecorateAsScala {
     }
   }
 
+  implicit class DeepArrayAsScalaArray[A](val array: Array[A]) extends AnyVal {
+    def deepAsScala[B: ClassTag](implicit converter: SConverter[A, B]): Array[B] = converter match {
+      case _: SCastConverter[_, _] => array.asInstanceOf[Array[B]]
+      case _ => array.map(converter.convert).toArray
+    }
+  }
+
   implicit class DeepJavaMapAsMutableMap[A, B](val javaMap: JMap[A, B]) extends AnyVal {
     def deepAsScala[C, D](implicit keyConverter: SConverter[A, C], valueConverter: SConverter[B, D]): MMap[C, D] = (keyConverter, valueConverter) match {
       case (_: SCastConverter[_, _], _: SCastConverter[_, _]) => javaMap.asScala.asInstanceOf[MMap[C, D]]

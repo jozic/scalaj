@@ -86,6 +86,49 @@ class SimpleSConvertersTest extends WordSpec with Matchers {
     }
   }
 
+  "ArrayConverters" should {
+
+    def acceptArrayOf[A](ar: Array[A]) = ()
+
+    def checkSameInstance(javaArray: Array[_]): Unit = {
+      javaArray.deepAsScala should be theSameInstanceAs javaArray
+    }
+
+    "convert arrays of primitives properly" in {
+      acceptArrayOf[Byte](Array[JByte](jb(1), jb(2), jb(3)).deepAsScala)
+      acceptArrayOf[Short](Array[JShort](js(1), js(2), js(3)).deepAsScala)
+      acceptArrayOf[Int](Array[JInt](1, 2, 3).deepAsScala)
+      acceptArrayOf[Long](Array[JLong](1L, 2L, 3L).deepAsScala)
+      acceptArrayOf[Float](Array[JFloat](1F, 2F, 3F).deepAsScala)
+      acceptArrayOf[Double](Array[JDouble](1D, 2D, 3D).deepAsScala)
+      acceptArrayOf[Char](Array[JChar]('a', 'b').deepAsScala)
+      acceptArrayOf[Boolean](Array[JBoolean](true, false).deepAsScala)
+    }
+
+    "convert arrays of non-primitives properly" in {
+      case class Boo(i: Int)
+      acceptArrayOf[Boo](Array(Boo(3), Boo(5)).deepAsScala)
+    }
+
+    "allow custom converters" in {
+      implicit val intToString = SConverter[Int, String](_ + 1.toString)
+      val asScala: Array[String] = Array(1, 2, 3).deepAsScala
+      asScala(0) should be("11")
+      asScala(1) should be("21")
+      asScala(2) should be("31")
+    }
+
+    "return same array with primitives and self conversions" in {
+      checkSameInstance(Array(1))
+      checkSameInstance(Array('s'))
+      checkSameInstance(Array(12D))
+      class A
+      checkSameInstance(Array(new A))
+    }
+
+  }
+
+
   "JSetConverters" should {
 
     def setOf[A, JS <: JSet[A] : ClassTag](as: A*): JS = {
