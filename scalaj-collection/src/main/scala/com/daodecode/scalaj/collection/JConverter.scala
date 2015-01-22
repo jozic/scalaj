@@ -50,7 +50,6 @@ object JConverter extends LowImplicitSelfJConverter {
   implicit def seqConverter[A, B](implicit converter: JConverter[A, B]): JConverter[Seq[A], JList[B]] =
     JConverter[Seq[A], JList[B]](_.deepAsJava)
 
-
   implicit def setConverter[A, B](implicit converter: JConverter[A, B]): JConverter[collection.Set[A], JSet[B]] =
     JConverter[collection.Set[A], JSet[B]](_.deepAsJava)
 

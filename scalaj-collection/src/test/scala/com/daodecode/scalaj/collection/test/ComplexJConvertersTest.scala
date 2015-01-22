@@ -3,11 +3,11 @@ package com.daodecode.scalaj.collection.test
 import com.daodecode.scalaj.collection._
 import org.scalatest.{Matchers, WordSpec}
 
-import scala.collection.mutable
+import scala.collection.mutable.{Buffer => MBuffer, Set => MSet}
 
-class ComplexJConverterTest extends WordSpec with Matchers {
+class ComplexJConvertersTest extends WordSpec with Matchers {
 
-  "Collection Converters" should {
+  "AsJava collection converters" should {
 
     "convert nested collections and primitives" in {
 
@@ -32,7 +32,7 @@ class ComplexJConverterTest extends WordSpec with Matchers {
 
     "keep nested mutable collections as mutable" in {
 
-      val sm: mutable.Set[mutable.Buffer[Int]] = mutable.Set(mutable.Buffer(1, 2))
+      val sm: MSet[MBuffer[Int]] = MSet(MBuffer(1, 2))
       val jm = sm.deepAsJava(JConverter.bufferConverter)
       //todo: try to make it work without explicit converter
       //      val jm = sm.deepAsJava
@@ -40,9 +40,10 @@ class ComplexJConverterTest extends WordSpec with Matchers {
       val jList: JList[JInt] = jm.iterator().next()
 
       jList.add(3)
-      sm should be(mutable.Set(mutable.Buffer(1, 2, 3)))
+      sm should be(MSet(MBuffer(1, 2, 3)))
     }
   }
+
 
 }
 
