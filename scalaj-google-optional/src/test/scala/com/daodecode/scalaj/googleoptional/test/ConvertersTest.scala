@@ -56,6 +56,19 @@ class ConvertersTest extends WordSpec with Matchers {
     "convert Some of null to absent, as Optional can't have nulls" in {
       Some[A](null).deepAsJava should be(Optional.absent[A])
     }
+
+    "convert nested options" in {
+      Option(Option(2D)).deepAsJava: GOption[GOption[JDouble]]
+    }
+
+    "convert collections in options" in {
+      Option(Set(2D)).deepAsJava: GOption[JSet[JDouble]]
+    }
+
+    "convert options in collections" in {
+      Set(Option(2D)).deepAsJava: JSet[GOption[JDouble]]
+      Option(Map(Option(2L) -> Set(Option('a')))).deepAsJava: GOption[JMap[GOption[JLong], JSet[GOption[JChar]]]]
+    }
   }
 
   "AsScala Converter" should {
