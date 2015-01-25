@@ -1,11 +1,14 @@
 package com.daodecode.scalaj.googleoptional.test
 
 import com.daodecode.scalaj.collection._
+import com.daodecode.scalaj.collection.test.{JMapBuilder, JSetBuilder}
 import com.daodecode.scalaj.googleoptional._
-import com.google.common.base.Optional
+import com.google.common.base.{Optional => GOption}
 import org.scalatest.{Matchers, WordSpec}
 
-class ConvertersTest extends WordSpec with Matchers {
+import scala.collection.mutable.{Map => MMap, Set => MSet}
+
+class ConvertersTest extends WordSpec with Matchers with JSetBuilder with JMapBuilder {
 
   def jb(b: Byte): JByte = b
 
@@ -17,7 +20,7 @@ class ConvertersTest extends WordSpec with Matchers {
 
     "convert Somes with primitives and any non collection types properly" in {
 
-      def checkPresent[T](optional: Optional[T], expected: T): Unit = {
+      def checkPresent[T](optional: GOption[T], expected: T): Unit = {
         optional.get() should be(expected)
       }
 
@@ -37,8 +40,8 @@ class ConvertersTest extends WordSpec with Matchers {
 
     "convert Nones with primitives and any non-collection types properly" in {
 
-      def checkAbsent[T](optional: Optional[T]): Unit = {
-        optional should be(Optional.absent[T])
+      def checkAbsent[T](optional: GOption[T]): Unit = {
+        optional should be(GOption.absent[T])
       }
 
       checkAbsent[JByte](Option.empty[Byte].deepAsJava)
@@ -54,19 +57,27 @@ class ConvertersTest extends WordSpec with Matchers {
     }
 
     "convert Some of null to absent, as Optional can't have nulls" in {
-      Some[A](null).deepAsJava should be(Optional.absent[A])
+      Some[A](null).deepAsJava should be(GOption.absent[A])
     }
 
     "convert nested options" in {
+      Option(Option(2D)).deepAsJava
       Option(Option(2D)).deepAsJava: GOption[GOption[JDouble]]
     }
 
     "convert collections in options" in {
+      //requires type ascription
+      //      Option(Set(2D)).deepAsJava // doesn't compile
       Option(Set(2D)).deepAsJava: GOption[JSet[JDouble]]
     }
 
     "convert options in collections" in {
+      Set(Option(2D)).deepAsJava
       Set(Option(2D)).deepAsJava: JSet[GOption[JDouble]]
+
+      // following compiles, but infers wrong type
+      Option(Map(Option(2L) -> Set(Option('a')))).deepAsJava
+
       Option(Map(Option(2L) -> Set(Option('a')))).deepAsJava: GOption[JMap[GOption[JLong], JSet[GOption[JChar]]]]
     }
   }
@@ -81,17 +92,17 @@ class ConvertersTest extends WordSpec with Matchers {
         option.get should be(expected)
       }
 
-      checkSome[Byte](Optional.of(jb(1)).deepAsScala, expected = 1: Byte)
-      checkSome[Short](Optional.of(js(1)).deepAsScala, expected = 1: Short)
-      checkSome[Int](Optional.of(1: JInt).deepAsScala, expected = 1)
-      checkSome[Long](Optional.of(1L: JLong).deepAsScala, expected = 1L)
-      checkSome[Float](Optional.of(1F: JFloat).deepAsScala, expected = 1F)
-      checkSome[Double](Optional.of(1D: JDouble).deepAsScala, expected = 1D)
-      checkSome[Char](Optional.of('a': JChar).deepAsScala, expected = 'a')
-      checkSome[Boolean](Optional.of(false: JBoolean).deepAsScala, expected = false)
+      checkSome[Byte](GOption.of(jb(1)).deepAsScala, expected = 1: Byte)
+      checkSome[Short](GOption.of(js(1)).deepAsScala, expected = 1: Short)
+      checkSome[Int](GOption.of(1: JInt).deepAsScala, expected = 1)
+      checkSome[Long](GOption.of(1L: JLong).deepAsScala, expected = 1L)
+      checkSome[Float](GOption.of(1F: JFloat).deepAsScala, expected = 1F)
+      checkSome[Double](GOption.of(1D: JDouble).deepAsScala, expected = 1D)
+      checkSome[Char](GOption.of('a': JChar).deepAsScala, expected = 'a')
+      checkSome[Boolean](GOption.of(false: JBoolean).deepAsScala, expected = false)
 
       val a = new A
-      checkSome[A](Optional.of(a).deepAsScala, expected = a)
+      checkSome[A](GOption.of(a).deepAsScala, expected = a)
     }
 
     "convert Absents with primitives and any non collection types properly" in {
@@ -100,17 +111,40 @@ class ConvertersTest extends WordSpec with Matchers {
         option should be(None)
       }
 
-      checkNone[Byte](Optional.absent[JByte].deepAsScala)
-      checkNone[Short](Optional.absent[JShort].deepAsScala)
-      checkNone[Int](Optional.absent[JInt].deepAsScala)
-      checkNone[Long](Optional.absent[JLong].deepAsScala)
-      checkNone[Float](Optional.absent[JFloat].deepAsScala)
-      checkNone[Double](Optional.absent[JDouble].deepAsScala)
-      checkNone[Char](Optional.absent[JChar].deepAsScala)
-      checkNone[Boolean](Optional.absent[JBoolean].deepAsScala)
+      checkNone[Byte](GOption.absent[JByte].deepAsScala)
+      checkNone[Short](GOption.absent[JShort].deepAsScala)
+      checkNone[Int](GOption.absent[JInt].deepAsScala)
+      checkNone[Long](GOption.absent[JLong].deepAsScala)
+      checkNone[Float](GOption.absent[JFloat].deepAsScala)
+      checkNone[Double](GOption.absent[JDouble].deepAsScala)
+      checkNone[Char](GOption.absent[JChar].deepAsScala)
+      checkNone[Boolean](GOption.absent[JBoolean].deepAsScala)
 
-      checkNone[A](Optional.absent[A].deepAsScala)
+      checkNone[A](GOption.absent[A].deepAsScala)
     }
+
+    "convert nested options" in {
+      GOption.of(GOption.of[JDouble](2D)).deepAsScala
+      GOption.of(GOption.of[JDouble](2D)).deepAsScala: Option[Option[Double]]
+    }
+
+    "convert collections in options" in {
+      //requires type ascription
+      //      GOption.of(JSet[JDouble](2D)).deepAsScala // doesn't compile
+      GOption.of(JSet[JDouble](2D)).deepAsScala: Option[MSet[Double]]
+    }
+
+    "convert options in collections" in {
+      JSet(GOption.of[JDouble](2D)).deepAsScala
+      JSet(GOption.of[JDouble](2D)).deepAsScala: MSet[Option[Double]]
+
+      // following compiles, but infers wrong type
+      GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a')))).deepAsScala
+
+      GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a'))))
+        .deepAsScala: Option[MMap[Option[Long], MSet[Option[Char]]]]
+    }
+
   }
 
 }

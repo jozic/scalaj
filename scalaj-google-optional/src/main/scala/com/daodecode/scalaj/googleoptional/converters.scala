@@ -1,6 +1,6 @@
 package com.daodecode.scalaj.googleoptional
 
-import com.daodecode.scalaj.collection.{CollectionsJConverter, JConverter, PrimitivesJConverter}
+import com.daodecode.scalaj.collection._
 
 import scala.language.implicitConversions
 
@@ -17,4 +17,14 @@ object GOJConverter extends PrimitivesJConverter with CollectionsJConverter {
 
 }
 
+trait GOSConverter[-A, +B] extends SConverter[A, B]
 
+object GOSConverter extends CollectionsSConverter  with PrimitivesSConverter {
+
+  def apply[A, B](c: A => B) = new GOSConverter[A, B] {
+    override def convert(a: A): B = c(a)
+  }
+
+  implicit def SConverterToGOSConverter[A, B](implicit sConv: SConverter[A, B]): GOSConverter[A, B] =
+    GOSConverter[A, B](sConv.convert)
+}

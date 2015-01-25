@@ -32,7 +32,7 @@ with JListBuilder with JSetBuilder with JMapBuilder {
     "keep nested mutable collections as mutable" in {
 
       val jm: JSet[JList[JInt]] = JSet(JList[JInt](1, 2))
-      val sm = jm.deepAsScala
+      val sm = jm.deepAsScala(SConverter.jListConverter)
 
       val buffer: MBuffer[Int] = sm.head
       buffer += 3

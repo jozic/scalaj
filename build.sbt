@@ -18,4 +18,5 @@ lazy val scalaj = project.in(file(".")).aggregate(`scalaj-collection`, `scalaj-g
 
 lazy val `scalaj-collection` = project.settings(settings: _*)
 
-lazy val `scalaj-google-optional` = project.settings(settings: _*).dependsOn(`scalaj-collection`)
+lazy val `scalaj-google-optional` = project.settings(settings: _*).
+  dependsOn(`scalaj-collection` % "compile->compile;test->test")

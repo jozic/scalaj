@@ -25,5 +25,7 @@ package object googleoptional {
   implicit def optionConverter[A, B](implicit converter: GOJConverter[A, B]): GOJConverter[Option[A], GOption[B]] =
     GOJConverter[Option[A], GOption[B]](_.deepAsJava)
 
+  implicit def optionalConverter[A, B](implicit converter: GOSConverter[A, B]): GOSConverter[GOption[A], Option[B]] =
+    GOSConverter[GOption[A], Option[B]](_.deepAsScala)
 
 }
