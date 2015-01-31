@@ -10,7 +10,7 @@ package object googleoptional {
   type GOption[A] = com.google.common.base.Optional[A]
 
   implicit class DeepOptionAsOptional[A](val option: Option[A]) extends AnyVal {
-    def deepAsJava[B](implicit converter: GOJConverter[A, B]): GOption[B] =
+    def deepAsJava[B](implicit converter: JConverter[A, B]): GOption[B] =
       option.fold(GOption.absent[B])(a => GOption.fromNullable(converter.convert(a)))
   }
 
@@ -22,10 +22,10 @@ package object googleoptional {
         None
   }
 
-  implicit def optionConverter[A, B](implicit converter: GOJConverter[A, B]): GOJConverter[Option[A], GOption[B]] =
-    GOJConverter[Option[A], GOption[B]](_.deepAsJava)
+  implicit def optionConverter[A, B](implicit converter: JConverter[A, B]): JConverter[Option[A], GOption[B]] =
+    JConverter[Option[A], GOption[B]](_.deepAsJava)
 
-  implicit def optionalConverter[A, B](implicit converter: GOSConverter[A, B]): GOSConverter[GOption[A], Option[B]] =
-    GOSConverter[GOption[A], Option[B]](_.deepAsScala)
+  implicit def optionalConverter[A, B](implicit converter: SConverter[A, B]): SConverter[GOption[A], Option[B]] =
+    SConverter[GOption[A], Option[B]](_.deepAsScala)
 
 }
