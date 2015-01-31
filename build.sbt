@@ -1,5 +1,58 @@
-name := "scalaj"
+import com.typesafe.sbt.SbtPgp.PgpKeys._
+import org.scoverage.coveralls.CoverallsPlugin._
+import sbtrelease.ReleasePlugin._
+import sbtrelease.ReleaseStateTransformations._
+import sbtrelease._
+import scoverage.ScoverageSbtPlugin._
+import xerial.sbt.Sonatype._
 
+val coverageSettings = Seq(
+
+  CoverallsKeys.coverallsTokenFile := Some("./token.txt"),
+
+  ScoverageKeys.coverageMinimum := 70,
+
+  ScoverageKeys.coverageFailOnMinimum := true,
+
+  ScoverageKeys.coverageHighlighting := true
+)
+
+val releaseSettings = ReleasePlugin.releaseSettings ++ Seq(
+
+  ReleaseKeys.crossBuild := true,
+
+  ReleaseKeys.publishArtifactsAction := publishSigned.value,
+
+  ReleaseKeys.releaseProcess := Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    runTest,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    publishArtifacts,
+    setNextVersion,
+    commitNextVersion,
+    pushChanges
+  )
+)
+
+val publishSettings = sonatypeSettings ++ Seq(
+
+  startYear := Some(2015),
+
+  homepage := Some(url("http://github.com/jozic/scalaj")),
+
+  developers := List(
+    Developer("jozic", "Eugene Platonov", "jozic@live.com", url("http://github.com/jozic"))
+  ),
+
+  scmInfo := homepage.value.map(ScmInfo(_, "scm:git:git@github.com:jozic/scalaj.git")),
+
+  licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/BSD-3-Clause"))
+
+)
 
 val settings = Seq(
   organization := "com.daodecode",
@@ -13,9 +66,10 @@ val settings = Seq(
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
 
   libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.2" % "test"
-)
+) ++ publishSettings ++ releaseSettings ++ coverageSettings
 
 lazy val scalaj = project.in(file(".")).aggregate(`scalaj-collection`, `scalaj-google-optional`)
+  .settings(publishArtifact := false)
 
 lazy val `scalaj-collection` = project.settings(settings: _*)
 
