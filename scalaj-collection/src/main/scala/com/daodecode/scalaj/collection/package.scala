@@ -59,7 +59,7 @@ package object collection extends DecorateAsJava with DecorateAsScala {
   implicit class DeepArrayAsJavaArray[A](val array: Array[A]) extends AnyVal {
     def deepAsJava[B: ClassTag](implicit converter: JConverter[A, B]): Array[B] = converter match {
       case _: JCastConverter[_, _] => array.asInstanceOf[Array[B]]
-      case _ => array.map(converter.convert).toArray
+      case _ => array.map(converter.convert)
     }
   }
 
@@ -101,7 +101,7 @@ package object collection extends DecorateAsJava with DecorateAsScala {
   implicit class DeepArrayAsScalaArray[A](val array: Array[A]) extends AnyVal {
     def deepAsScala[B: ClassTag](implicit converter: SConverter[A, B]): Array[B] = converter match {
       case _: SCastConverter[_, _] => array.asInstanceOf[Array[B]]
-      case _ => array.map(converter.convert).toArray
+      case _ => array.map(converter.convert)
     }
   }
 
