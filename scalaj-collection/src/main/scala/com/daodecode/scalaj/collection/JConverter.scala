@@ -39,7 +39,12 @@ trait PrimitivesJConverter extends LowImplicitSelfJConverter {
 
 }
 
-trait CollectionsJConverter {
+object JConverter extends PrimitivesJConverter {
+
+  def apply[A, B](c: A => B) = new JConverter[A, B] {
+    override def convert(a: A): B = c(a)
+  }
+
   implicit def bufferConverter[A, B](implicit converter: JConverter[A, B]): JConverter[MBuffer[A], JList[B]] =
     JConverter[MBuffer[A], JList[B]](_.deepAsJava)
 
@@ -58,13 +63,5 @@ trait CollectionsJConverter {
   implicit def mapConverter[A, B, C, D](implicit keyConverter: JConverter[A, C],
                                         valueConverter: JConverter[B, D]): JConverter[Map[A, B], JMap[C, D]] =
     JConverter[Map[A, B], JMap[C, D]](_.deepAsJava[C, D])
-
-}
-
-object JConverter extends PrimitivesJConverter with CollectionsJConverter {
-
-  def apply[A, B](c: A => B) = new JConverter[A, B] {
-    override def convert(a: A): B = c(a)
-  }
 
 }

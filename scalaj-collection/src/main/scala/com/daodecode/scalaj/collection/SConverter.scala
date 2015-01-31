@@ -39,7 +39,12 @@ trait PrimitivesSConverter extends LowImplicitSelfSConverter {
 
 }
 
-trait CollectionsSConverter {
+object SConverter extends PrimitivesSConverter {
+
+  def apply[A, B](c: A => B) = new SConverter[A, B] {
+    override def convert(a: A): B = c(a)
+  }
+
   implicit def jListConverter[A, B](implicit converter: SConverter[A, B]): SConverter[JList[A], MBuffer[B]] =
     SConverter[JList[A], MBuffer[B]](_.deepAsScala)
 
@@ -52,12 +57,5 @@ trait CollectionsSConverter {
   implicit def jMapConverter[A, B, C, D](implicit keyConverter: SConverter[A, C],
                                          valueConverter: SConverter[B, D]): SConverter[JMap[A, B], MMap[C, D]] =
     SConverter[JMap[A, B], MMap[C, D]](_.deepAsScala[C, D])
-}
-
-object SConverter extends CollectionsSConverter with PrimitivesSConverter {
-
-  def apply[A, B](c: A => B) = new SConverter[A, B] {
-    override def convert(a: A): B = c(a)
-  }
 
 }

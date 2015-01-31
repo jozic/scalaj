@@ -1,6 +1,5 @@
 package com.daodecode.scalaj.googleoptional.test
 
-import com.daodecode.scalaj.collection._
 import com.daodecode.scalaj.collection.test.{JMapBuilder, JSetBuilder}
 import com.daodecode.scalaj.googleoptional._
 import com.google.common.base.{Optional => GOption}
@@ -61,22 +60,34 @@ class ConvertersTest extends WordSpec with Matchers with JSetBuilder with JMapBu
     }
 
     "convert nested options" in {
-      Option(Option(2D)).deepAsJava
+      val asJava = Option(Option(2D)).deepAsJava
+      asJava shouldBe a[GOption[_]]
+      asJava.get shouldBe a[GOption[_]]
+
       Option(Option(2D)).deepAsJava: GOption[GOption[JDouble]]
     }
 
     "convert collections in options" in {
-      //requires type ascription
-      //      Option(Set(2D)).deepAsJava // doesn't compile
+      val asJava = Option(Set(2D)).deepAsJava
+      asJava shouldBe a[GOption[_]]
+      asJava.get() shouldBe a[JSet[_]]
+
       Option(Set(2D)).deepAsJava: GOption[JSet[JDouble]]
     }
 
     "convert options in collections" in {
-      Set(Option(2D)).deepAsJava
-      Set(Option(2D)).deepAsJava: JSet[GOption[JDouble]]
+      import com.daodecode.scalaj.collection._
 
-      // following compiles, but infers wrong type
-      Option(Map(Option(2L) -> Set(Option('a')))).deepAsJava
+      val asJava = Set(Option(2D)).deepAsJava
+      asJava shouldBe a[JSet[_]]
+      asJava.iterator().next() shouldBe a[GOption[_]]
+
+      val asJava2 = Option(Map(Option(2L) -> Set(Option('a')))).deepAsJava
+      asJava2 shouldBe a[GOption[_]]
+      asJava2.get shouldBe a[JMap[_, _]]
+      asJava2.get.keySet().iterator().next() shouldBe a[GOption[_]]
+      asJava2.get.values().iterator().next() shouldBe a[JSet[_]]
+      asJava2.get.values().iterator().next().iterator().next() shouldBe a[GOption[_]]
 
       Option(Map(Option(2L) -> Set(Option('a')))).deepAsJava: GOption[JMap[GOption[JLong], JSet[GOption[JChar]]]]
     }
@@ -124,22 +135,38 @@ class ConvertersTest extends WordSpec with Matchers with JSetBuilder with JMapBu
     }
 
     "convert nested options" in {
-      GOption.of(GOption.of[JDouble](2D)).deepAsScala
+      val asScala = GOption.of(GOption.of[JDouble](2D)).deepAsScala
+
+      asScala shouldBe an[Option[_]]
+      asScala.get shouldBe an[Option[_]]
+
       GOption.of(GOption.of[JDouble](2D)).deepAsScala: Option[Option[Double]]
     }
 
     "convert collections in options" in {
       //requires type ascription
-      //      GOption.of(JSet[JDouble](2D)).deepAsScala // doesn't compile
+      val asScala = GOption.of(JSet[JDouble](2D)).deepAsScala
+      asScala shouldBe an[Option[_]]
+      asScala.get shouldBe an[MSet[_]]
+
       GOption.of(JSet[JDouble](2D)).deepAsScala: Option[MSet[Double]]
     }
 
     "convert options in collections" in {
-      JSet(GOption.of[JDouble](2D)).deepAsScala
+      import com.daodecode.scalaj.collection._
+
+      val asScala = JSet(GOption.of[JDouble](2D)).deepAsScala
+      asScala shouldBe an[MSet[_]]
+      asScala.head shouldBe an[Option[_]]
+
       JSet(GOption.of[JDouble](2D)).deepAsScala: MSet[Option[Double]]
 
-      // following compiles, but infers wrong type
-      GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a')))).deepAsScala
+      val asScala2 = GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a')))).deepAsScala
+      asScala2 shouldBe an[Option[_]]
+      asScala2.get shouldBe an[MMap[_, _]]
+      asScala2.get.head._1 shouldBe an[Option[_]]
+      asScala2.get.head._2 shouldBe an[MSet[_]]
+      asScala2.get.head._2.head shouldBe an[Option[_]]
 
       GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a'))))
         .deepAsScala: Option[MMap[Option[Long], MSet[Option[Char]]]]

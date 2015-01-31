@@ -4,20 +4,7 @@ import scala.collection.convert.{DecorateAsJava, DecorateAsScala}
 import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Seq => MSeq, Set => MSet}
 import scala.reflect.ClassTag
 
-package object collection extends DecorateAsJava with DecorateAsScala {
-
-  type JList[A] = java.util.List[A]
-  type JSet[A] = java.util.Set[A]
-  type JMap[A, B] = java.util.Map[A, B]
-
-  type JByte = java.lang.Byte
-  type JShort = java.lang.Short
-  type JInt = java.lang.Integer
-  type JLong = java.lang.Long
-  type JFloat = java.lang.Float
-  type JDouble = java.lang.Double
-  type JChar = java.lang.Character
-  type JBoolean = java.lang.Boolean
+package object collection extends DecorateAsJava with DecorateAsScala with JavaAliases{
 
   /** deepAsJava converters **/
 
