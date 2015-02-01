@@ -5,6 +5,8 @@ import sbtrelease.ReleaseStateTransformations._
 import sbtrelease._
 import scoverage.ScoverageSbtPlugin._
 import xerial.sbt.Sonatype._
+import scala.xml.{Node => XmlNode, NodeSeq => XmlNodeSeq, _}
+import scala.xml.transform.{RewriteRule, RuleTransformer}
 
 val coverageSettings = Seq(
 
@@ -50,7 +52,17 @@ val publishSettings = sonatypeSettings ++ Seq(
 
   scmInfo := homepage.value.map(ScmInfo(_, "scm:git:git@github.com:jozic/scalaj.git")),
 
-  licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/BSD-3-Clause"))
+  licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/BSD-3-Clause")),
+
+  pomPostProcess := { (node: XmlNode) =>
+    new RuleTransformer(new RewriteRule {
+      override def transform(node: XmlNode): XmlNodeSeq = node match {
+        case e: Elem
+          if e.label == "dependency" && e.child.exists(child => child.label == "groupId" && child.text == "org.scoverage") => XmlNodeSeq.Empty
+        case _ => node
+      }
+    }).transform(node).head
+  }
 
 )
 
@@ -65,7 +77,7 @@ val settings = Seq(
 
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
 
-  libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.2" % "test"
+  libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 ) ++ publishSettings ++ releaseSettings ++ coverageSettings
 
 lazy val scalaj = project.in(file(".")).aggregate(`scalaj-collection`, `scalaj-google-optional`)
