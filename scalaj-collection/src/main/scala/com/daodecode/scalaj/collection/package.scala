@@ -4,7 +4,7 @@ import scala.collection.convert.{DecorateAsJava, DecorateAsScala}
 import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Seq => MSeq, Set => MSet}
 import scala.reflect.ClassTag
 
-package object collection extends DecorateAsJava with DecorateAsScala with JavaAliases{
+package object collection extends DecorateAsJava with DecorateAsScala with JavaAliases {
 
   /** deepAsJava converters **/
 

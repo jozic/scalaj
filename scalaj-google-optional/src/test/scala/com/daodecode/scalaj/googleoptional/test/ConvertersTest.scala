@@ -1,5 +1,6 @@
 package com.daodecode.scalaj.googleoptional.test
 
+import com.daodecode.scalaj.JavaAliases._
 import com.daodecode.scalaj.collection.test.{JMapBuilder, JSetBuilder}
 import com.daodecode.scalaj.googleoptional._
 import com.google.common.base.{Optional => GOption}

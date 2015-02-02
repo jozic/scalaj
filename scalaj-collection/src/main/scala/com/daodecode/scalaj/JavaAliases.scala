@@ -1,4 +1,4 @@
-package com.daodecode.scalaj.collection
+package com.daodecode.scalaj
 
 trait JavaAliases {
   type JList[A] = java.util.List[A]
@@ -14,3 +14,5 @@ trait JavaAliases {
   type JChar = java.lang.Character
   type JBoolean = java.lang.Boolean
 }
+
+object JavaAliases extends JavaAliases

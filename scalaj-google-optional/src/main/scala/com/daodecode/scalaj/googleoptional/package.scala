@@ -5,7 +5,7 @@ import com.google.common.base.{Optional => GOption}
 
 import scala.language.implicitConversions
 
-package object googleoptional extends JavaAliases {
+package object googleoptional {
 
   type GOption[A] = com.google.common.base.Optional[A]
 
