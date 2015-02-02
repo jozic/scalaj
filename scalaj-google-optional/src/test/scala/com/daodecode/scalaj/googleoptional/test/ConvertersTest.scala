@@ -12,9 +12,13 @@ class ConvertersTest extends WordSpec with Matchers with JSetBuilder with JMapBu
 
   def jb(b: Byte): JByte = b
 
+  def sb(b: Byte): Byte = b
+
   def js(s: Short): JShort = s
 
-  "AsJava Converter" should {
+  def ss(s: Short): Short = s
+
+  "DeepAsJava Converter" should {
 
     class A
 
@@ -94,7 +98,69 @@ class ConvertersTest extends WordSpec with Matchers with JSetBuilder with JMapBu
     }
   }
 
-  "AsScala Converter" should {
+  "AsJava Converter" should {
+
+    class A
+
+    "convert Somes without touching primitives " in {
+
+      def checkPresent[T](optional: GOption[T], expected: T): Unit = {
+        optional.get() should be(expected)
+      }
+
+      checkPresent(Option(sb(1)).asJava, expected = sb(1))
+      checkPresent(Option(ss(1)).asJava, expected = ss(1))
+      checkPresent(Option(1).asJava, expected = 1)
+      checkPresent(Option(1L).asJava, expected = 1L)
+      checkPresent(Option(1F).asJava, expected = 1F)
+      checkPresent(Option(1D).asJava, expected = 1D)
+      checkPresent(Option('a').asJava, expected = 'a')
+      checkPresent(Option(true).asJava, expected = true)
+
+      val a = new A
+      checkPresent(Option(a).deepAsJava, expected = a)
+    }
+
+    "convert Nones properly" in {
+
+      def checkAbsent[T](optional: GOption[T]): Unit = {
+        optional should be(GOption.absent[T])
+      }
+
+      checkAbsent[Byte](Option.empty[Byte].asJava)
+      checkAbsent[Short](Option.empty[Short].asJava)
+      checkAbsent[Int](Option.empty[Int].asJava)
+      checkAbsent[Long](Option.empty[Long].asJava)
+      checkAbsent[Float](Option.empty[Float].asJava)
+      checkAbsent[Double](Option.empty[Double].asJava)
+      checkAbsent[Char](Option.empty[Char].asJava)
+      checkAbsent[Boolean](Option.empty[Boolean].asJava)
+
+      checkAbsent[A](Option.empty[A].asJava)
+    }
+
+    "convert Some of null to absent, as Optional can't have nulls" in {
+      Some[A](null).asJava should be(GOption.absent[A])
+    }
+
+    "convert NOT nested options" in {
+      val asJava = Option(Option(2D)).asJava
+      asJava shouldBe a[GOption[_]]
+      asJava.get shouldBe a[Option[_]]
+
+      Option(Option(2D)).asJava: GOption[Option[Double]]
+    }
+
+    "convert NOT collections in options" in {
+      val asJava = Option(Set(2D)).asJava
+      asJava shouldBe a[GOption[_]]
+      asJava.get() shouldBe a[Set[_]]
+
+      Option(Set(2D)).asJava: GOption[Set[Double]]
+    }
+  }
+
+  "DeepAsScala Converter" should {
 
     class A
 
@@ -171,6 +237,66 @@ class ConvertersTest extends WordSpec with Matchers with JSetBuilder with JMapBu
 
       GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a'))))
         .deepAsScala: Option[MMap[Option[Long], MSet[Option[Char]]]]
+    }
+
+  }
+
+  "AsScala Converter" should {
+
+    class A
+
+    "convert Presents without touching primitives" in {
+
+      def checkSome[T](option: Option[T], expected: T): Unit = {
+        option.get should be(expected)
+      }
+
+      checkSome[JByte](GOption.of(jb(1)).asScala, expected = jb(1))
+      checkSome[JShort](GOption.of(js(1)).asScala, expected = js(1))
+      checkSome[JInt](GOption.of(1: JInt).asScala, expected = 1: JInt)
+      checkSome[JLong](GOption.of(1L: JLong).asScala, expected = 1L: JLong)
+      checkSome[JFloat](GOption.of(1F: JFloat).asScala, expected = 1F: JFloat)
+      checkSome[JDouble](GOption.of(1D: JDouble).asScala, expected = 1D: JDouble)
+      checkSome[JChar](GOption.of('a': JChar).asScala, expected = 'a': JChar)
+      checkSome[JBoolean](GOption.of(false: JBoolean).asScala, expected = false: JBoolean)
+
+      val a = new A
+      checkSome[A](GOption.of(a).asScala, expected = a)
+    }
+
+    "convert Absents properly" in {
+
+      def checkNone[T](option: Option[T]): Unit = {
+        option should be(None)
+      }
+
+      checkNone[JByte](GOption.absent[JByte].asScala)
+      checkNone[JShort](GOption.absent[JShort].asScala)
+      checkNone[JInt](GOption.absent[JInt].asScala)
+      checkNone[JLong](GOption.absent[JLong].asScala)
+      checkNone[JFloat](GOption.absent[JFloat].asScala)
+      checkNone[JDouble](GOption.absent[JDouble].asScala)
+      checkNone[JChar](GOption.absent[JChar].asScala)
+      checkNone[JBoolean](GOption.absent[JBoolean].asScala)
+
+      checkNone[A](GOption.absent[A].asScala)
+    }
+
+    "convert NOT nested options" in {
+      val asScala = GOption.of(GOption.of[JDouble](2D)).asScala
+
+      asScala shouldBe an[Option[_]]
+      asScala.get shouldBe an[GOption[_]]
+
+      GOption.of(GOption.of[JDouble](2D)).asScala: Option[GOption[JDouble]]
+    }
+
+    "convert NOT collections in options" in {
+      val asScala = GOption.of(JSet[JDouble](2D)).asScala
+      asScala shouldBe an[Option[_]]
+      asScala.get shouldBe an[JSet[_]]
+
+      GOption.of(JSet[JDouble](2D)).asScala: Option[JSet[JDouble]]
     }
 
   }
