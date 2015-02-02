@@ -59,6 +59,18 @@ val publishSettings = sonatypeSettings ++ Seq(
       override def transform(node: XmlNode): XmlNodeSeq = node match {
         case e: Elem
           if e.label == "dependency" && e.child.exists(child => child.label == "groupId" && child.text == "org.scoverage") => XmlNodeSeq.Empty
+        case e: Elem
+          if e.label == "developers" =>
+          <developers>
+            { developers.value.map { dev =>
+              <developer>
+                <id>{ dev.id }</id>
+                <name>{ dev.name }</name>
+                <email>{ dev.email }</email>
+                <url>{ dev.url }</url>
+              </developer>
+            }}
+          </developers>
         case _ => node
       }
     }).transform(node).head
