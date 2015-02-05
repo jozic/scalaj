@@ -78,13 +78,15 @@ val publishSettings = sonatypeSettings ++ Seq(
 
 )
 
-val settings = Seq(
+val commonSettings = Seq (
   organization := "com.daodecode",
 
   scalaVersion := "2.10.4",
 
-  crossScalaVersions := Seq("2.10.4", "2.11.5"),
+  crossScalaVersions := Seq("2.10.4", "2.11.5")
+)
 
+val settings = commonSettings ++ Seq(
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xlint", "-Xfatal-warnings", "-Xlog-implicits"),
 
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
@@ -93,7 +95,8 @@ val settings = Seq(
 ) ++ publishSettings ++ releaseSettings ++ coverageSettings
 
 lazy val scalaj = project.in(file(".")).aggregate(`scalaj-collection`, `scalaj-google-optional`)
-  .settings(publishArtifact := false)
+  .settings(commonSettings: _*).settings(publishArtifact := false,
+    publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))))
 
 lazy val `scalaj-collection` = project.settings(settings: _*)
 
