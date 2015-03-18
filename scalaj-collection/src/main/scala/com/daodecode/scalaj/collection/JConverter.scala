@@ -8,7 +8,7 @@ trait JConverter[-A, +B] {
   def convert(a: A): B
 }
 
-class JCastConverter[-A, +B] extends JConverter[A, B] {
+class JCastConverter[A, B] extends JConverter[A, B] {
   override def convert(a: A): B = a.asInstanceOf[B]
 }
 
