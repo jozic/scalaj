@@ -1,6 +1,6 @@
 package com.daodecode.scalaj.collection
 
-import scala.collection.mutable.{Buffer => MBuffer, Seq => MSeq}
+import scala.collection.{Map => GenMap, Seq => GenSeq, Set => GenSet}
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
@@ -45,23 +45,16 @@ object JConverter extends PrimitivesJConverter {
     override def convert(a: A): B = c(a)
   }
 
-  implicit def bufferConverter[A, B](implicit converter: JConverter[A, B]): JConverter[MBuffer[A], JList[B]] =
-    JConverter[MBuffer[A], JList[B]](_.deepAsJava)
+  implicit def seqConverter[A, B](implicit converter: JConverter[A, B]): JConverter[GenSeq[A], JList[B]] =
+    JConverter[GenSeq[A], JList[B]](_.deepAsJava)
 
-  implicit def mSeqConverter[A, B](implicit converter: JConverter[A, B]): JConverter[MSeq[A], JList[B]] =
-    JConverter[MSeq[A], JList[B]](_.deepAsJava)
-
-  implicit def seqConverter[A, B](implicit converter: JConverter[A, B]): JConverter[Seq[A], JList[B]] =
-    JConverter[Seq[A], JList[B]](_.deepAsJava)
-
-  implicit def setConverter[A, B](implicit converter: JConverter[A, B]): JConverter[collection.Set[A], JSet[B]] =
+  implicit def setConverter[A, B](implicit converter: JConverter[A, B]): JConverter[GenSet[A], JSet[B]] =
     JConverter[collection.Set[A], JSet[B]](_.deepAsJava)
 
   implicit def arrayConverter[A, B: ClassTag](implicit converter: JConverter[A, B]): JConverter[Array[A], Array[B]] =
     JConverter[Array[A], Array[B]](_.deepAsJava[B])
 
   implicit def mapConverter[A, B, C, D](implicit keyConverter: JConverter[A, C],
-                                        valueConverter: JConverter[B, D]): JConverter[Map[A, B], JMap[C, D]] =
-    JConverter[Map[A, B], JMap[C, D]](_.deepAsJava[C, D])
-
+                                        valueConverter: JConverter[B, D]): JConverter[GenMap[A, B], JMap[C, D]] =
+    JConverter[GenMap[A, B], JMap[C, D]](_.deepAsJava[C, D])
 }

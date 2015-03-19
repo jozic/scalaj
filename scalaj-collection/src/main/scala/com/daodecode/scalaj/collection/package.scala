@@ -2,44 +2,36 @@ package com.daodecode.scalaj
 
 import scala.collection.convert.{DecorateAsJava, DecorateAsScala}
 import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Seq => MSeq, Set => MSet}
+import scala.collection.{Seq => GenSeq, Set => GenSet, Map => GenMap}
 import scala.reflect.ClassTag
 
 package object collection extends DecorateAsJava with DecorateAsScala with JavaAliases {
 
   /** deepAsJava converters **/
+  implicit class DeepSeqAsJavaList[A](val scalaSeq: GenSeq[A]) extends AnyVal {
+    private def toJava[T](genSeq: GenSeq[T]): JList[T] = genSeq match {
+      case buffer: MBuffer[T] => buffer.asJava
+      case mSeq: MSeq[T] => mSeq.asJava
+      case _ => genSeq.asJava
+    }
 
-  implicit class DeepMutableBufferAsJavaList[A](val scalaBuffer: MBuffer[A]) extends AnyVal {
-    def deepAsJava[B](implicit converter: JConverter[A, B]): JList[B] = converter match {
-      case _: JCastConverter[_, _] => scalaBuffer.asJava.asInstanceOf[JList[B]]
-      case _ => scalaBuffer.map(converter.convert).asJava
+    def deepAsJava[B](implicit converter: JConverter[A, B]): JList[B] = {
+      converter match {
+        case _: JCastConverter[_, _] => toJava(scalaSeq).asInstanceOf[JList[B]]
+        case _ => toJava(scalaSeq.map(converter.convert))
+      }
     }
   }
 
-  implicit class DeepMutableSeqAsJavaList[A](val scalaSeq: MSeq[A]) extends AnyVal {
-    def deepAsJava[B](implicit converter: JConverter[A, B]): JList[B] = converter match {
-      case _: JCastConverter[_, _] => scalaSeq.asJava.asInstanceOf[JList[B]]
-      case _ => scalaSeq.map(converter.convert).asJava
+  implicit class DeepSetAsJavaSet[A](val scalaSet: GenSet[A]) extends AnyVal {
+    private def toJava[T](genSet: GenSet[T]): JSet[T] = genSet match {
+      case mSet: MSet[T] => mSet.asJava
+      case _ => genSet.asJava
     }
-  }
 
-  implicit class DeepSeqAsJavaList[A](val scalaSeq: Seq[A]) extends AnyVal {
-    def deepAsJava[B](implicit converter: JConverter[A, B]): JList[B] = converter match {
-      case _: JCastConverter[_, _] => scalaSeq.asJava.asInstanceOf[JList[B]]
-      case _ => scalaSeq.map(converter.convert).asJava
-    }
-  }
-
-  implicit class DeepSetAsJavaSet[A](val scalaSet: scala.collection.Set[A]) extends AnyVal {
     def deepAsJava[B](implicit converter: JConverter[A, B]): JSet[B] = converter match {
-      case _: JCastConverter[_, _] => scalaSet.asJava.asInstanceOf[JSet[B]]
-      case _ => scalaSet.map(converter.convert).asJava
-    }
-  }
-
-  implicit class DeepMutableSetAsJavaSet[A](val scalaSet: MSet[A]) extends AnyVal {
-    def deepAsJava[B](implicit converter: JConverter[A, B]): JSet[B] = converter match {
-      case _: JCastConverter[_, _] => scalaSet.asJava.asInstanceOf[JSet[B]]
-      case _ => scalaSet.map(converter.convert).asJava
+      case _: JCastConverter[_, _] => toJava(scalaSet).asInstanceOf[JSet[B]]
+      case _ => toJava(scalaSet.map(converter.convert))
     }
   }
 
@@ -50,21 +42,17 @@ package object collection extends DecorateAsJava with DecorateAsScala with JavaA
     }
   }
 
-  implicit class DeepMapAsJavaMap[A, B](val scalaMap: scala.collection.Map[A, B]) extends AnyVal {
-    def deepAsJava[C, D](implicit keyConverter: JConverter[A, C], valueConverter: JConverter[B, D]): JMap[C, D] = (keyConverter, valueConverter) match {
-      case (_: JCastConverter[_, _], _: JCastConverter[_, _]) => scalaMap.asJava.asInstanceOf[JMap[C, D]]
-      case _ => scalaMap.map { case (k, v) =>
-        keyConverter.convert(k) -> valueConverter.convert(v)
-      }.asJava
+  implicit class DeepMapAsJavaMap[A, B](val scalaMap: GenMap[A, B]) extends AnyVal {
+    private def toJava[T, U](genMap: GenMap[T, U]): JMap[T, U] = genMap match {
+      case mMap: MMap[T, U] => mMap.asJava
+      case _ => genMap.asJava
     }
-  }
 
-  implicit class DeepMutableMapAsJavaMap[A, B](val scalaMap: MMap[A, B]) extends AnyVal {
     def deepAsJava[C, D](implicit keyConverter: JConverter[A, C], valueConverter: JConverter[B, D]): JMap[C, D] = (keyConverter, valueConverter) match {
-      case (_: JCastConverter[_, _], _: JCastConverter[_, _]) => scalaMap.asJava.asInstanceOf[JMap[C, D]]
-      case _ => scalaMap.map { case (k, v) =>
+      case (_: JCastConverter[_, _], _: JCastConverter[_, _]) => toJava(scalaMap).asInstanceOf[JMap[C, D]]
+      case _ => toJava(scalaMap.map { case (k, v) =>
         keyConverter.convert(k) -> valueConverter.convert(v)
-      }.asJava
+      })
     }
   }
 
