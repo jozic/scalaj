@@ -1,9 +1,10 @@
 package com.daodecode.scalaj.collection.test
 
+import scala.collection.immutable.{Seq => ImSeq}
+import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Set => MSet}
+
 import com.daodecode.scalaj.collection._
 import org.scalatest.{Matchers, WordSpec}
-
-import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Set => MSet}
 
 class ComplexSConvertersTest extends WordSpec with Matchers
 with JListBuilder with JSetBuilder with JMapBuilder {
@@ -32,12 +33,19 @@ with JListBuilder with JSetBuilder with JMapBuilder {
     "keep nested mutable collections as mutable" in {
 
       val jm: JSet[JList[JInt]] = JSet(JList[JInt](1, 2))
-      val sm = jm.deepAsScala(SConverter.jListConverter)
+      val sm = jm.deepAsScala
 
       val buffer: MBuffer[Int] = sm.head
       buffer += 3
 
-      jm.iterator().next() should be (JList[JInt](1, 2, 3))
+      jm.iterator().next() should be(JList[JInt](1, 2, 3))
+    }
+
+    "return nested collections as immutable if asked" in {
+      import com.daodecode.scalaj.collection.immutable._
+
+      val jm: JList[JList[JInt]] = JList(JList[JInt](1, 2))
+      jm.deepAsScalaImmutable: ImSeq[ImSeq[Int]]
     }
   }
 

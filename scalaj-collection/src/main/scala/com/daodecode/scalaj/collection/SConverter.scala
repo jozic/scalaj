@@ -8,7 +8,7 @@ trait SConverter[-A, +B] {
   def convert(a: A): B
 }
 
-class SCastConverter[-A, +B] extends SConverter[A, B] {
+class SCastConverter[A, B] extends SConverter[A, B] {
   override def convert(a: A): B = a.asInstanceOf[B]
 }
 
@@ -41,7 +41,7 @@ trait PrimitivesSConverter extends LowImplicitSelfSConverter {
 
 object SConverter extends PrimitivesSConverter {
 
-  def apply[A, B](c: A => B) = new SConverter[A, B] {
+  def apply[A, B](c: A => B): SConverter[A, B] = new SConverter[A, B] {
     override def convert(a: A): B = c(a)
   }
 
@@ -57,5 +57,4 @@ object SConverter extends PrimitivesSConverter {
   implicit def jMapConverter[A, B, C, D](implicit keyConverter: SConverter[A, C],
                                          valueConverter: SConverter[B, D]): SConverter[JMap[A, B], MMap[C, D]] =
     SConverter[JMap[A, B], MMap[C, D]](_.deepAsScala[C, D])
-
 }

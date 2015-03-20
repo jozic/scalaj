@@ -3,12 +3,13 @@ package com.daodecode.scalaj.collection.test
 import java.util
 import java.util.Arrays.asList
 
-import com.daodecode.scalaj.collection._
-import org.scalatest.{Matchers, WordSpec}
-
+import scala.collection.immutable.{Seq => ImSeq}
 import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Set => MSet}
 import scala.language.higherKinds
 import scala.reflect.ClassTag
+
+import com.daodecode.scalaj.collection._
+import org.scalatest.{Matchers, WordSpec}
 
 class SimpleSConvertersTest extends WordSpec with Matchers
 with JListBuilder with JSetBuilder with JMapBuilder {
@@ -73,6 +74,12 @@ with JListBuilder with JSetBuilder with JMapBuilder {
 
       class A
       checkSameInstance(new util.ArrayList[A]())
+    }
+
+    "return immutable seq if asked" in {
+      import com.daodecode.scalaj.collection.immutable._
+
+      asList[JLong](1L, 2L, 3L).deepAsScalaImmutable: ImSeq[Long]
     }
   }
 

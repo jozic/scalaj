@@ -41,7 +41,7 @@ trait PrimitivesJConverter extends LowImplicitSelfJConverter {
 
 object JConverter extends PrimitivesJConverter {
 
-  def apply[A, B](c: A => B) = new JConverter[A, B] {
+  def apply[A, B](c: A => B): JConverter[A, B] = new JConverter[A, B] {
     override def convert(a: A): B = c(a)
   }
 
