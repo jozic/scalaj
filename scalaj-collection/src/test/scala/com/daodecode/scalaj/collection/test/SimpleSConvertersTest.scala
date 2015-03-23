@@ -189,6 +189,12 @@ with JListBuilder with JSetBuilder with JMapBuilder {
       checkSameInstance(setOf[A, util.HashSet[A]](new A))
     }
 
+    "return immutable set if asked" in {
+      import com.daodecode.scalaj.collection.immutable._
+
+      JSet[JLong](1L, 2L, 3L).deepAsScalaImmutable: Set[Long]
+    }
+
   }
 
   "JMapConverters" should {
