@@ -238,6 +238,38 @@ class ConvertersTest extends WordSpec with Matchers with JSetBuilder with JMapBu
       GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a'))))
         .deepAsScala: Option[MMap[Option[Long], MSet[Option[Char]]]]
     }
+  }
+
+  "DeepAsScalaImmutable Converter" should {
+    "convert nested collections as immutable if asked" in {
+      import com.daodecode.scalaj.collection.immutable._
+
+      val asScala = GOption.of(JSet[JDouble](2D)).deepAsScala
+      asScala shouldBe an[Option[_]]
+      asScala.get shouldBe an[Set[_]]
+
+      GOption.of(JSet[JDouble](2D)).deepAsScala: Option[Set[Double]]
+    }
+
+    "convert collections in options in collections as immutable if asked" in {
+      import com.daodecode.scalaj.collection.immutable._
+
+      val asScala = JSet(GOption.of[JDouble](2D)).deepAsScalaImmutable
+      asScala shouldBe an[Set[_]]
+      asScala.head shouldBe an[Option[_]]
+
+      JSet(GOption.of[JDouble](2D)).deepAsScalaImmutable: Set[Option[Double]]
+
+      val asScala2 = GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a')))).deepAsScala
+      asScala2 shouldBe an[Option[_]]
+      asScala2.get shouldBe an[Map[_, _]]
+      asScala2.get.head._1 shouldBe an[Option[_]]
+      asScala2.get.head._2 shouldBe an[Set[_]]
+      asScala2.get.head._2.head shouldBe an[Option[_]]
+
+      GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a'))))
+        .deepAsScala: Option[Map[Option[Long], Set[Option[Char]]]]
+    }
 
   }
 
