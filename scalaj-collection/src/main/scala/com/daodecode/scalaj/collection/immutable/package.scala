@@ -11,6 +11,10 @@ package object immutable {
   implicit def jSetImmutableConverter[A, B](implicit converter: SConverter[A, B]): SConverter[JSet[A], Set[B]] =
     SConverter[JSet[A], Set[B]](_.deepAsScalaImmutable)
 
+  implicit def jMapImmutableConverter[A, B, C, D](implicit keyConverter: SConverter[A, C],
+                                         valueConverter: SConverter[B, D]): SConverter[JMap[A, B], Map[C, D]] =
+    SConverter[JMap[A, B], Map[C, D]](_.deepAsScalaImmutable[C, D])
+
 
   implicit class DeepJavaListAsImmutableSeq[A](val javaList: JList[A]) extends AnyVal {
     def deepAsScalaImmutable[B](implicit converter: SConverter[A, B]): ImSeq[B] =
@@ -22,4 +26,9 @@ package object immutable {
       javaSet.deepAsScala[B].to[Set]
   }
 
+  implicit class DeepJavaMapAsImmutableMap[A, B](val javaMap: JMap[A, B]) extends AnyVal {
+    def deepAsScalaImmutable[C, D](implicit keyConverter: SConverter[A, C],
+                                             valueConverter: SConverter[B, D]): Map[C, D] =
+      javaMap.deepAsScala[C, D].toMap[C,D]
+  }
 }

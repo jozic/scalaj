@@ -262,6 +262,11 @@ with JListBuilder with JSetBuilder with JMapBuilder {
       checkSameInstance(mapOf[A, String, util.HashMap[A, String]](new A -> "a"))
     }
 
+    "return immutable map if asked" in {
+      import com.daodecode.scalaj.collection.immutable._
+
+      JMap[String, JDouble]("1" -> 1.0D).deepAsScalaImmutable: Map[String, Double]
+    }
   }
 
 }

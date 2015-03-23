@@ -48,6 +48,8 @@ with JListBuilder with JSetBuilder with JMapBuilder {
       jm.deepAsScalaImmutable: ImSeq[ImSeq[Int]]
 
       JList(JSet[JChar]('a')).deepAsScalaImmutable: ImSeq[Set[Char]]
+
+      JMap((1L: JLong) -> JList(JSet[JInt](1,2,3))).deepAsScalaImmutable: Map[Long, ImSeq[Set[Int]]]
     }
   }
 
