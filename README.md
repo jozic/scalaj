@@ -17,12 +17,13 @@ def iTakeInt(i: Int) = { ... }
 val something = someJavaListOfJavaIntegers.asScala.map(iTakeInt(_))
 ```
 
-or
+or this
 
 ```
 import scala.collection.JavaConverters._
 
-val something: Map[java.lang.Long, Buffer] = someJavaMapOfJavaLongsToJavaLists.asScala.mapValues(_.asScala)
+val something: mutable.Map[java.lang.Long, Buffer] = 
+  someJavaMapOfJavaLongsToJavaLists.asScala.mapValues(_.asScala)
 
 ```
 
@@ -32,24 +33,34 @@ Now you can do
 ```
 import com.daodecode.scalaj.collection._
 
-val something: Map[Long, Buffer] = someJavaMapOfJavaLongsToJavaLists.deepAsScala
+val something: mutable.Map[Long, Buffer] = someJavaMapOfJavaLongsToJavaLists.deepAsScala
 
 ```
 
 scalaj will go all the way down converting every nested collection or primitive type.
-But beware, it will cost you something
+Of course you should be ready to pay some cost for all this conversions
 
-having `scalaj-googloptional` in classpath you can add [guava Optionals](http://guava) to your
-funky data structures and convert between them and scala versions and all the way back
+having `scalaj-googloptional` in classpath you can add [guava Optionals](https://github.com/google/guava/blob/master/guava/src/com/google/common/base/Optional.java) to your
+funky data structures and convert between them and scala versions all the way back
 
 ```
-val javaSetOfOptionalsOfJavaDoubles: java.util.Set[Optional[java.lang.Double] = ...
+val foo: java.util.Set[Optional[java.lang.Double] = ...
 
 import com.daodecode.scalaj.googleoptional._
 
-val scalaOne: Set[Option[Double]] = javaSetOfOptionalsOfJavaDoubles.deepAsScala
+val scalaFoo: mutable.Set[Option[Double]] = foo.deepAsScala
 ```
 
+If you want you scala collections ~~well-done~~ immutable, you can do it as well
+
+```
+val boo: java.util.Set[Optional[java.util.List[java.lang.Double]] = ...
+
+import com.daodecode.scalaj.googleoptional._
+import com.daodecode.scalaj.collection.immutable._
+
+val immutableScalaBoo: Set[Option[immutable.Seq[Double]]] = boo.deepAsScalaImmutable
+```
 
 #scalaj-collection
 
@@ -190,6 +201,7 @@ or
 
 ##Related projects
 
-https://github.com/softprops/guavapants
+https://github.com/softprops/guavapants  
+
 https://github.com/scalaj/scalaj-collection
 
