@@ -24,7 +24,6 @@ import scala.collection.JavaConverters._
 
 val something: mutable.Map[java.lang.Long, Buffer] = 
   someJavaMapOfJavaLongsToJavaLists.asScala.mapValues(_.asScala)
-
 ```
 
 look no more!  
@@ -33,15 +32,15 @@ Now you can do
 ```
 import com.daodecode.scalaj.collection._
 
-val something: mutable.Map[Long, Buffer] = someJavaMapOfJavaLongsToJavaLists.deepAsScala
-
+val something: mutable.Map[Long, Buffer] = 
+  someJavaMapOfJavaLongsToJavaLists.deepAsScala
 ```
 
-scalaj will go all the way down converting every nested collection or primitive type.
+scalaj will go all the way down converting every nested collection or primitive type.  
 Of course you should be ready to pay some cost for all this conversions
 
 having `scalaj-googloptional` in classpath you can add [guava Optionals](https://github.com/google/guava/blob/master/guava/src/com/google/common/base/Optional.java) to your
-funky data structures and convert between them and scala versions all the way back
+funky data structures and convert between them and scala versions all the way down and back
 
 ```
 val foo: java.util.Set[Optional[java.lang.Double] = ...
