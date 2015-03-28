@@ -74,7 +74,7 @@ val commonSettings = Seq (
   crossScalaVersions := Seq("2.10.5", "2.11.6")
 )
 
-val settings = commonSettings ++ Seq(
+val moduleSettings = commonSettings ++ Seq(
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xlint", "-Xfatal-warnings"),
 
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
@@ -83,10 +83,13 @@ val settings = commonSettings ++ Seq(
 ) ++ publishSettings ++ releaseSettings ++ coverageSettings
 
 lazy val scalaj = project.in(file(".")).aggregate(`scalaj-collection`, `scalaj-google-optional`)
-  .settings(commonSettings: _*).settings(publishArtifact := false,
-    publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))))
+  .settings(
+    publishArtifact := false,
+    publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))),
+    commonSettings
+  )
 
-lazy val `scalaj-collection` = project.settings(settings: _*)
+lazy val `scalaj-collection` = project.settings(moduleSettings)
 
-lazy val `scalaj-google-optional` = project.settings(settings: _*).
+lazy val `scalaj-google-optional` = project.settings(moduleSettings).
   dependsOn(`scalaj-collection` % "compile->compile;test->test")
