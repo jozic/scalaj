@@ -72,7 +72,7 @@ val commonSettings = Seq (
   scalaVersion := "2.10.5",
 
   crossScalaVersions := Seq("2.10.5", "2.11.6")
-)
+) ++ releaseSettings
 
 val moduleSettings = commonSettings ++ Seq(
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xlint", "-Xfatal-warnings"),
@@ -80,7 +80,7 @@ val moduleSettings = commonSettings ++ Seq(
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
 
   libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
-) ++ publishSettings ++ releaseSettings ++ coverageSettings
+) ++ publishSettings ++ coverageSettings
 
 lazy val scalaj = project.in(file(".")).aggregate(`scalaj-collection`, `scalaj-google-optional`)
   .settings(
