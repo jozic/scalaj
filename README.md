@@ -64,18 +64,18 @@ val immutableScalaBoo: Set[Option[immutable.Seq[Double]]] = boo.deepAsScalaImmut
 #scalaj-collection
 
 
-##Latest stable release  NOT YET READY 
+##Latest stable release
 
 ### sbt
 ```
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.0"
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.1"
 ```
 ### maven
 ``` xml
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_2.10</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 </dependency>
 ```
 or
@@ -83,7 +83,7 @@ or
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_2.11</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 </dependency>
 ```
 
@@ -110,14 +110,14 @@ then add snapshot as a dependency
 
 ### sbt
 ```
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.0-SNAPSHOT"
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.2-SNAPSHOT"
 ```
 ### maven
 ``` xml
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_2.10</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
 </dependency>
 ```
 or
@@ -125,25 +125,25 @@ or
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_2.11</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
 </dependency>
 ```
 
 
 #scalaj-googleoptional
 
-##Latest stable release NOT YET READY
+##Latest stable release
 
 ### sbt
 ```
-libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.0"
+libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.1"
 ```
 ### maven
 ``` xml
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_2.10</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 </dependency>
 ```
 or
@@ -151,7 +151,7 @@ or
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_2.11</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
 </dependency>
 ```
 
@@ -178,14 +178,14 @@ then add snapshot as a dependency
 
 ### sbt
 ```
-libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.0-SNAPSHOT"
+libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.2-SNAPSHOT"
 ```
 ### maven
 ``` xml
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_2.10</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
 </dependency>
 ```
 or
@@ -193,7 +193,7 @@ or
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_2.11</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.2-SNAPSHOT</version>
 </dependency>
 ```
 
