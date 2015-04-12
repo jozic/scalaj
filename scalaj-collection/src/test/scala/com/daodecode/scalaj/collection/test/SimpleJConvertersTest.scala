@@ -88,7 +88,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     "support all Seq subclasses" in {
-      acceptJListOf(Nil.deepAsJava)
+      acceptJListOf(List.empty[Int].deepAsJava)
       acceptJListOf(List(1).deepAsJava)
       acceptJListOf(Vector(1).deepAsJava)
       acceptJListOf(Stream(1).deepAsJava)
@@ -110,9 +110,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
       acceptJListOf(mutable.Queue(1).deepAsJava)
       acceptJListOf(mutable.Stack(1).deepAsJava)
       acceptJListOf(mutable.ArrayStack(1).deepAsJava)
-      acceptJListOf(mutable.DoubleLinkedList(1).deepAsJava)
       acceptJListOf(mutable.ArraySeq(1).deepAsJava)
-      acceptJListOf(mutable.LinkedList(1).deepAsJava)
       acceptJListOf(mutable.MutableList(1).deepAsJava)
       acceptJListOf(mutable.ResizableArray(1).deepAsJava)
     }
@@ -122,9 +120,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
       checkMutableSeq[mutable.ArraySeq[Int]]
       checkMutableSeq[mutable.LinearSeq[Int]]
       checkMutableSeq[mutable.IndexedSeq[Int]]
-      checkMutableSeq[mutable.DoubleLinkedList[Int]]
       checkMutableSeq[mutable.MutableList[Int]]
-      checkMutableSeq[mutable.LinkedList[Int]]
       checkMutableSeq[mutable.ResizableArray[Int]]
 
       checkMutableSeq[mutable.Queue[Int]]
