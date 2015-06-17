@@ -204,3 +204,7 @@ https://github.com/softprops/guavapants
 
 https://github.com/scalaj/scalaj-collection
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jozic/scalaj/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
