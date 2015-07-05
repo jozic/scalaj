@@ -34,42 +34,38 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
     }
 
-    def checkSameInstance(scalaBuffer: mutable.Buffer[_]): Unit = {
-      scalaBuffer.deepAsJava.asScala should be theSameInstanceAs scalaBuffer
-    }
-
     "convert lists of primitives properly" in {
 
-      //    acceptJListOf[JByte](List[Byte](1, 2, 3)) //doesn't compile
-      //    acceptJListOf[JByte](List[Byte](1, 2, 3).asJava) // doesn't compile
+      "acceptJListOf[JByte](List[Byte](1, 2, 3))" shouldNot compile
+      "acceptJListOf[JByte](List[Byte](1, 2, 3).asJava)" shouldNot compile
       acceptJListOf[JByte](List[Byte](1, 2, 3).deepAsJava)
 
-      //    acceptJListOf[JShort](List(1, 2, 3)) //doesn't compile
-      //    acceptJListOf[JShort](List(1, 2, 3).asJava) // doesn't compile
+      "acceptJListOf[JShort](List(1, 2, 3))" shouldNot compile
+      "acceptJListOf[JShort](List(1, 2, 3).asJava)" shouldNot compile
       acceptJListOf[JShort](List[Short](1, 2, 3).deepAsJava)
 
-      //    acceptJListOf[JInt](List(1, 2, 3)) //doesn't compile
-      //    acceptJListOf[JInt](List(1, 2, 3).asJava) // doesn't compile
+      "acceptJListOf[JInt](List(1, 2, 3))" shouldNot compile
+      "acceptJListOf[JInt](List(1, 2, 3).asJava)" shouldNot compile
       acceptJListOf[JInt](List(1, 2, 3).deepAsJava)
 
-      //    acceptJListOf[JLong](List(1L, 2L, 3L)) //doesn't compile
-      //    acceptJListOf[JLong](List(1L, 2L, 3L).asJava) // doesn't compile
+      "acceptJListOf[JLong](List(1L, 2L, 3L))" shouldNot compile
+      "acceptJListOf[JLong](List(1L, 2L, 3L).asJava)" shouldNot compile
       acceptJListOf[JLong](List(1L, 2L, 3L).deepAsJava)
 
-      //    acceptJListOf[JFloat](List(1F, 2F, 3F)) //doesn't compile
-      //    acceptJListOf[JFloat](List(1F, 2F, 3F).asJava) // doesn't compile
+      "acceptJListOf[JFloat](List(1F, 2F, 3F))" shouldNot compile
+      "acceptJListOf[JFloat](List(1F, 2F, 3F).asJava)" shouldNot compile
       acceptJListOf[JFloat](List(1F, 2F, 3F).deepAsJava)
 
-      //    acceptJListOf[JDouble](List(1D, 2D, 3D)) //doesn't compile
-      //    acceptJListOf[JDouble](List(1D, 2D, 3D).asJava) // doesn't compile
+      "acceptJListOf[JDouble](List(1D, 2D, 3D))" shouldNot compile
+      "acceptJListOf[JDouble](List(1D, 2D, 3D).asJava)" shouldNot compile
       acceptJListOf[JDouble](List(1D, 2D, 3D).deepAsJava)
 
-      //    acceptJListOf[JChar](List('a', 'b')) //doesn't compile
-      //    acceptJListOf[JChar](List('a', 'b').asJava) // doesn't compile
+      "acceptJListOf[JChar](List('a', 'b'))" shouldNot compile
+      "acceptJListOf[JChar](List('a', 'b').asJava)" shouldNot compile
       acceptJListOf[JChar](List('a', 'b').deepAsJava)
 
-      //    acceptJListOf[JBoolean](List(true, false)) //doesn't compile
-      //    acceptJListOf[JBoolean](List(true, false).asJava) // doesn't compile
+      "acceptJListOf[JBoolean](List(true, false))" shouldNot compile
+      "acceptJListOf[JBoolean](List(true, false).asJava)" shouldNot compile
       acceptJListOf[JBoolean](List(true, false).deepAsJava)
     }
 
@@ -141,13 +137,27 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     "return same scala buffer with primitives and self conversions" in {
-      checkSameInstance(mutable.Buffer(1))
-      checkSameInstance(mutable.ArrayBuffer(1))
-      checkSameInstance(mutable.ListBuffer(1))
-      checkSameInstance(mutable.UnrolledBuffer(1))
-
-      class A
-      checkSameInstance(mutable.Buffer(new A))
+      {
+        val scalaBuffer = mutable.Buffer(1)
+        scalaBuffer.deepAsJava.asScala should be theSameInstanceAs scalaBuffer
+      }
+      {
+        val scalaBuffer = mutable.ArrayBuffer(1)
+        scalaBuffer.deepAsJava.asScala should be theSameInstanceAs scalaBuffer
+      }
+      {
+        val scalaBuffer = mutable.ListBuffer(1)
+        scalaBuffer.deepAsJava.asScala should be theSameInstanceAs scalaBuffer
+      }
+      {
+        val scalaBuffer = mutable.UnrolledBuffer(1)
+        scalaBuffer.deepAsJava.asScala should be theSameInstanceAs scalaBuffer
+      }
+      {
+        class A
+        val scalaBuffer = mutable.Buffer(new A)
+        scalaBuffer.deepAsJava.asScala should be theSameInstanceAs scalaBuffer
+      }
     }
   }
 
@@ -155,49 +165,43 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
     def acceptArrayOf[A](ar: Array[A]) = ()
 
-    def checkSameInstance(scalaArray: Array[_]): Unit = {
-      scalaArray.deepAsJava should be theSameInstanceAs scalaArray
-    }
-
-
     "convert arrays of primitives properly" in {
-
-      //          acceptArrayOf[JByte](Array[Byte](1, 2, 3)) //doesn't compile
-      //          acceptArrayOf[JByte](Array[Byte](1, 2, 3).asJava) // doesn't compile
+      "acceptArrayOf[JByte](Array[Byte](1, 2, 3))" shouldNot compile
+      "acceptArrayOf[JByte](Array[Byte](1, 2, 3).asJava)" shouldNot compile
       acceptArrayOf[JByte](Array[Byte](1, 2, 3).deepAsJava)
 
-      //    acceptArrayOf[JShort](Array(1, 2, 3)) //doesn't compile
-      //    acceptArrayOf[JShort](Array(1, 2, 3).asJava) // doesn't compile
+      "acceptArrayOf[JShort](Array(1, 2, 3))" shouldNot compile
+      "acceptArrayOf[JShort](Array(1, 2, 3).asJava)" shouldNot compile
       acceptArrayOf[JShort](Array[Short](1, 2, 3).deepAsJava)
 
-      //    acceptArrayOf[JInt](Array(1, 2, 3)) //doesn't compile
-      //    acceptArrayOf[JInt](Array(1, 2, 3).asJava) // doesn't compile
-      acceptArrayOf[JInt](Array(1, 2, 3).deepAsJava)
+      "acceptArrayOf[JInt](Array[Int](1, 2, 3))" shouldNot compile
+      "acceptArrayOf[JInt](Array[Int](1, 2, 3).asJava)" shouldNot compile
+      acceptArrayOf[JInt](Array[Int](1, 2, 3).deepAsJava)
 
-      //    acceptArrayOf[JLong](Array(1L, 2L, 3L)) //doesn't compile
-      //    acceptArrayOf[JLong](Array(1L, 2L, 3L).asJava) // doesn't compile
-      acceptArrayOf[JLong](Array(1L, 2L, 3L).deepAsJava)
+      "acceptArrayOf[JLong](Array[Long](1L, 2L, 3L))" shouldNot compile
+      "acceptArrayOf[JLong](Array[Long](1L, 2L, 3L).asJava)" shouldNot compile
+      acceptArrayOf[JLong](Array[Long](1L, 2L, 3L).deepAsJava)
 
-      //    acceptArrayOf[JFloat](Array(1F, 2F, 3F)) //doesn't compile
-      //    acceptArrayOf[JFloat](Array(1F, 2F, 3F).asJava) // doesn't compile
-      acceptArrayOf[JFloat](Array(1F, 2F, 3F).deepAsJava)
+      "acceptArrayOf[JFloat](Array[Float](1F, 2F, 3F))" shouldNot compile
+      "acceptArrayOf[JFloat](Array[Float](1F, 2F, 3F).asJava)" shouldNot compile
+      acceptArrayOf[JFloat](Array[Float](1F, 2F, 3F).deepAsJava)
 
-      //    acceptArrayOf[JDouble](Array(1D, 2D, 3D)) //doesn't compile
-      //    acceptArrayOf[JDouble](Array(1D, 2D, 3D).asJava) // doesn't compile
-      acceptArrayOf[JDouble](Array(1D, 2D, 3D).deepAsJava)
+      "acceptArrayOf[JDouble](Array[Double](1D, 2D, 3D))" shouldNot compile
+      "acceptArrayOf[JDouble](Array[Double](1D, 2D, 3D).asJava)" shouldNot compile
+      acceptArrayOf[JDouble](Array[Double](1D, 2D, 3D).deepAsJava)
 
-      //    acceptArrayOf[JChar](Array('a', 'b')) //doesn't compile
-      //    acceptArrayOf[JChar](Array('a', 'b').asJava) // doesn't compile
-      acceptArrayOf[JChar](Array('a', 'b').deepAsJava)
+      "acceptArrayOf[JChar](Array[Char]('a', 'b'))" shouldNot compile
+      "acceptArrayOf[JChar](Array[Char]('a', 'b').asJava)" shouldNot compile
+      acceptArrayOf[JChar](Array[Char]('a', 'b').deepAsJava)
 
-      //    acceptArrayOf[JBoolean](Array(true, false)) //doesn't compile
-      //    acceptArrayOf[JBoolean](Array(true, false).asJava) // doesn't compile
-      acceptArrayOf[JBoolean](Array(true, false).deepAsJava)
+      "acceptArrayOf[JBoolean](Array[Boolean](true, false))" shouldNot compile
+      "acceptArrayOf[JBoolean](Array[Boolean](true, false).asJava)" shouldNot compile
+      acceptArrayOf[JBoolean](Array[Boolean](true, false).deepAsJava)
     }
 
     "convert arrays of non-primitives properly" in {
       case class Boo(i: Int)
-      //      acceptArrayOf[Boo](Array(Boo(3), Boo(5)).asJava) // doesn't compile
+      "acceptArrayOf[Boo](Array(Boo(3), Boo(5)).asJava)" shouldNot compile
       acceptArrayOf[Boo](Array(Boo(3), Boo(5)).deepAsJava)
     }
 
@@ -209,12 +213,16 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
       asJava(2) should be("31")
     }
 
-    "return same array with primitives and self conversions" in {
-      checkSameInstance(Array(1))
-      checkSameInstance(Array('s'))
-      checkSameInstance(Array(12D))
-      class A
-      checkSameInstance(Array(new A))
+    "return same array with self conversions" in {
+      {
+        val scalaArray = Array("ss")
+        scalaArray.deepAsJava should be theSameInstanceAs scalaArray
+      }
+      {
+        class A
+        val scalaArray = Array(new A)
+        scalaArray.deepAsJava should be theSameInstanceAs scalaArray
+      }
     }
 
   }
@@ -230,42 +238,38 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
       mSet should be(Set(2, 5))
     }
 
-    def checkSameInstance(scalaSet: mutable.Set[_]): Unit = {
-      scalaSet.deepAsJava.asScala should be theSameInstanceAs scalaSet
-    }
-
     "convert sets of primitives properly" in {
 
-      //    acceptJSetOf[JByte](Set[Byte](1, 2, 3)) //doesn't compile
-      //    acceptJSetOf[JByte](Set[Byte](1, 2, 3).asJava) // doesn't compile
+      "acceptJSetOf[JByte](Set[Byte](1, 2, 3))" shouldNot compile
+      "acceptJSetOf[JByte](Set[Byte](1, 2, 3).asJava)" shouldNot compile
       acceptJSetOf[JByte](Set[Byte](1, 2, 3).deepAsJava)
 
-      //    acceptJSetOf[JShort](Set(1, 2, 3)) //doesn't compile
-      //    acceptJSetOf[JShort](Set(1, 2, 3).asJava) // doesn't compile
+      "acceptJSetOf[JShort](Set(1, 2, 3))" shouldNot compile
+      "acceptJSetOf[JShort](Set(1, 2, 3).asJava)" shouldNot compile
       acceptJSetOf[JShort](Set[Short](1, 2, 3).deepAsJava)
 
-      //    acceptJSetOf[JInt](Set(1, 2, 3)) //doesn't compile
-      //    acceptJSetOf[JInt](Set(1, 2, 3).asJava) // doesn't compile
+      "acceptJSetOf[JInt](Set(1, 2, 3))" shouldNot compile
+      "acceptJSetOf[JInt](Set(1, 2, 3).asJava)" shouldNot compile
       acceptJSetOf[JInt](Set(1, 2, 3).deepAsJava)
 
-      //    acceptJSetOf[JLong](Set(1L, 2L, 3L)) //doesn't compile
-      //    acceptJSetOf[JLong](Set(1L, 2L, 3L).asJava) // doesn't compile
+      "acceptJSetOf[JLong](Set(1L, 2L, 3L))" shouldNot compile
+      "acceptJSetOf[JLong](Set(1L, 2L, 3L).asJava)" shouldNot compile
       acceptJSetOf[JLong](Set(1L, 2L, 3L).deepAsJava)
 
-      //    acceptJSetOf[JFloat](Set(1F, 2F, 3F)) //doesn't compile
-      //    acceptJSetOf[JFloat](Set(1F, 2F, 3F).asJava) // doesn't compile
+      "acceptJSetOf[JFloat](Set(1F, 2F, 3F))" shouldNot compile
+      "acceptJSetOf[JFloat](Set(1F, 2F, 3F).asJava)" shouldNot compile
       acceptJSetOf[JFloat](Set(1F, 2F, 3F).deepAsJava)
 
-      //    acceptJSetOf[JDouble](Set(1D, 2D, 3D)) //doesn't compile
-      //    acceptJSetOf[JDouble](Set(1D, 2D, 3D).asJava) // doesn't compile
+      "acceptJSetOf[JDouble](Set(1D, 2D, 3D))" shouldNot compile
+      "acceptJSetOf[JDouble](Set(1D, 2D, 3D).asJava)" shouldNot compile
       acceptJSetOf[JDouble](Set(1D, 2D, 3D).deepAsJava)
 
-      //    acceptJSetOf[JChar](Set('a', 'b')) //doesn't compile
-      //    acceptJSetOf[JChar](Set('a', 'b').asJava) // doesn't compile
+      "acceptJSetOf[JChar](Set('a', 'b'))" shouldNot compile
+      "acceptJSetOf[JChar](Set('a', 'b').asJava)" shouldNot compile
       acceptJSetOf[JChar](Set('a', 'b').deepAsJava)
 
-      //    acceptJSetOf[JBoolean](Set(true, false)) //doesn't compile
-      //    acceptJSetOf[JBoolean](Set(true, false).asJava) // doesn't compile
+      "acceptJSetOf[JBoolean](Set(true, false))" shouldNot compile
+      "acceptJSetOf[JBoolean](Set(true, false).asJava)" shouldNot compile
       acceptJSetOf[JBoolean](Set(true, false).deepAsJava)
     }
 
@@ -308,16 +312,32 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     "return same mutable scala set with primitives and self conversions" in {
-      checkSameInstance(mutable.Set(1))
-      checkSameInstance(mutable.HashSet(1))
-      checkSameInstance(mutable.BitSet(1))
-      checkSameInstance(mutable.SortedSet(1))
-      checkSameInstance(mutable.TreeSet(1))
-
-      class A
-      checkSameInstance(mutable.Set(new A))
+      {
+        val scalaSet = mutable.Set(1)
+        scalaSet.deepAsJava.asScala should be theSameInstanceAs scalaSet
+      }
+      {
+        val scalaSet = mutable.HashSet(1)
+        scalaSet.deepAsJava.asScala should be theSameInstanceAs scalaSet
+      }
+      {
+        val scalaSet = mutable.BitSet(1)
+        scalaSet.deepAsJava.asScala should be theSameInstanceAs scalaSet
+      }
+      {
+        val scalaSet = mutable.SortedSet(1)
+        scalaSet.deepAsJava.asScala should be theSameInstanceAs scalaSet
+      }
+      {
+        val scalaSet = mutable.TreeSet(1)
+        scalaSet.deepAsJava.asScala should be theSameInstanceAs scalaSet
+      }
+      {
+        class A
+        val scalaSet = mutable.Set(new A)
+        scalaSet.deepAsJava.asScala should be theSameInstanceAs scalaSet
+      }
     }
-
   }
 
   "MapConverters" should {
@@ -331,25 +351,21 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
       mMap should be(Map(2 -> "two", 5 -> "five"))
     }
 
-    def checkSameInstance(scalaMap: mutable.Map[_, _]): Unit = {
-      scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
-    }
-
     "convert maps of primitives properly" in {
-      // acceptJMapOf[JByte, JInt](Map[Byte, Int]((1: Byte) -> 2) //doesn't compile
-      // acceptJMapOf[JByte, JInt](Map[Byte, Int]((1: Byte) -> 2).asJava) // doesn't compile
+      "acceptJMapOf[JByte, JInt](Map[Byte, Int]((1: Byte) -> 2)" shouldNot compile
+      "acceptJMapOf[JByte, JInt](Map[Byte, Int]((1: Byte) -> 2).asJava)" shouldNot compile
       acceptJMapOf[JByte, JInt](Map[Byte, Int]((1: Byte) -> 2).deepAsJava)
 
-      // acceptJMapOf[JShort, JLong](Map[Short, Long]((1: Short) -> 2L) //doesn't compile
-      // acceptJMapOf[JShort, JLong](Map[Short, Long]((1: Short) -> 2L).asJava // doesn't compile
+      "acceptJMapOf[JShort, JLong](Map[Short, Long]((1: Short) -> 2L)" shouldNot compile
+      "acceptJMapOf[JShort, JLong](Map[Short, Long]((1: Short) -> 2L).asJava" shouldNot compile
       acceptJMapOf[JShort, JLong](Map[Short, Long]((1: Short) -> 2L).deepAsJava)
 
-      // acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D) //doesn't compile
-      // acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D).asJava // doesn't compile
+      "acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D)" shouldNot compile
+      "acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D).asJava" shouldNot compile
       acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D).deepAsJava)
 
-      // acceptJMapOf[JBoolean, JChar](Map[Boolean, Char](true -> 't') //doesn't compile
-      // acceptJMapOf[JBoolean, JChar](Map[Boolean, Char](true -> 't').asJava // doesn't compile
+      "acceptJMapOf[JBoolean, JChar](Map[Boolean, Char](true -> 't')" shouldNot compile
+      "acceptJMapOf[JBoolean, JChar](Map[Boolean, Char](true -> 't').asJava" shouldNot compile
       acceptJMapOf[JBoolean, JChar](Map[Boolean, Char](true -> 't').deepAsJava)
     }
 
@@ -399,16 +415,32 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     "return same mutable scala map with primitives and self conversions" in {
-      checkSameInstance(mutable.Map(1 -> "one"))
-      checkSameInstance(mutable.HashMap(1 -> "one"))
-      checkSameInstance(mutable.ListMap(1 -> "one"))
-      checkSameInstance(mutable.LinkedHashMap(1 -> "one"))
-      checkSameInstance(mutable.OpenHashMap(1 -> "one"))
-      //      checkSameInstance(mutable.WeakHashMap(1 -> "one")) // doesn't hold for WeakHashMap, as it's a wrapper itself
-
-      class A
-      checkSameInstance(mutable.Map(new A -> "a"))
+      {
+        val scalaMap = mutable.Map(1 -> "one")
+        scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
+      }
+      {
+        val scalaMap = mutable.HashMap(1 -> "one")
+        scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
+      }
+      {
+        val scalaMap = mutable.ListMap(1 -> "one")
+        scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
+      }
+      {
+        val scalaMap = mutable.LinkedHashMap(1 -> "one")
+        scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
+      }
+      {
+        val scalaMap = mutable.OpenHashMap(1 -> "one")
+        scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
+      }
+      {
+        class A
+        val scalaMap = mutable.Map(new A -> "a")
+        scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
+      }
+      // doesn't hold for WeakHashMap, as it's a wrapper itself
     }
-
   }
 }

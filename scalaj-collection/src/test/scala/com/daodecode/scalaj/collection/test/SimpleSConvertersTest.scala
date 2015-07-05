@@ -29,12 +29,11 @@ with JListBuilder with JSetBuilder with JMapBuilder {
       jList should be(JList(2, 5))
     }
 
-    def checkSameInstance(javaList: JList[_]): Unit = {
-      javaList.deepAsScala.asJava should be theSameInstanceAs javaList
-    }
-
     "convert lists of primitives properly" in {
+      "acceptBufferOf[Byte](asList[JByte](jb(1), jb(2), jb(3)))" shouldNot compile
+      "acceptBufferOf[Byte](asList[JByte](jb(1), jb(2), jb(3)).asScala)" shouldNot compile
       acceptBufferOf[Byte](asList[JByte](jb(1), jb(2), jb(3)).deepAsScala)
+
       acceptBufferOf[Short](asList[JShort](js(1), js(2), js(3)).deepAsScala)
       acceptBufferOf[Int](asList[JInt](1, 2, 3).deepAsScala)
       acceptBufferOf[Long](asList[JLong](1L, 2L, 3L).deepAsScala)
@@ -46,6 +45,7 @@ with JListBuilder with JSetBuilder with JMapBuilder {
 
     "convert lists of non-primitives properly" in {
       case class Boo(i: Int)
+      "acceptBufferOf[Boo](asList(Boo(3), Boo(5)))" shouldNot compile
       acceptBufferOf[Boo](asList(Boo(3), Boo(5)).asScala)
       acceptBufferOf[Boo](asList(Boo(3), Boo(5)).deepAsScala)
     }
@@ -69,11 +69,19 @@ with JListBuilder with JSetBuilder with JMapBuilder {
     }
 
     "return same java list with primitives and self conversions" in {
-      checkSameInstance(new util.ArrayList[JLong]())
-      checkSameInstance(new util.LinkedList[JLong]())
-
-      class A
-      checkSameInstance(new util.ArrayList[A]())
+      {
+        val javaList = new util.ArrayList[JLong]()
+        javaList.deepAsScala.asJava should be theSameInstanceAs javaList
+      }
+      {
+        val javaList = new util.LinkedList[JLong]()
+        javaList.deepAsScala.asJava should be theSameInstanceAs javaList
+      }
+      {
+        class A
+        val javaList = new util.LinkedList[A]()
+        javaList.deepAsScala.asJava should be theSameInstanceAs javaList
+      }
     }
 
     "return immutable seq if asked" in {
@@ -86,10 +94,6 @@ with JListBuilder with JSetBuilder with JMapBuilder {
   "ArrayConverters" should {
 
     def acceptArrayOf[A](ar: Array[A]) = ()
-
-    def checkSameInstance(javaArray: Array[_]): Unit = {
-      javaArray.deepAsScala should be theSameInstanceAs javaArray
-    }
 
     "convert arrays of primitives properly" in {
       acceptArrayOf[Byte](Array[JByte](jb(1), jb(2), jb(3)).deepAsScala)
@@ -116,15 +120,25 @@ with JListBuilder with JSetBuilder with JMapBuilder {
     }
 
     "return same array with primitives and self conversions" in {
-      checkSameInstance(Array(1))
-      checkSameInstance(Array('s'))
-      checkSameInstance(Array(12D))
-      class A
-      checkSameInstance(Array(new A))
+      {
+        val javaArray = Array[Int](1)
+        javaArray.deepAsScala should be theSameInstanceAs javaArray
+      }
+      {
+        val javaArray = Array[Char]('s')
+        javaArray.deepAsScala should be theSameInstanceAs javaArray
+      }
+      {
+        val javaArray = Array[Double](12D)
+        javaArray.deepAsScala should be theSameInstanceAs javaArray
+      }
+      {
+        class A
+        val javaArray = Array[A](new A)
+        javaArray.deepAsScala should be theSameInstanceAs javaArray
+      }
     }
-
   }
-
 
   "JSetConverters" should {
 
@@ -136,10 +150,6 @@ with JListBuilder with JSetBuilder with JMapBuilder {
 
       mSet.deepAsScala += 5
       mSet should be(JSet(2, 5))
-    }
-
-    def checkSameInstance(javaSet: JSet[_]): Unit = {
-      javaSet.deepAsScala.asJava should be theSameInstanceAs javaSet
     }
 
     "convert sets of primitives properly" in {
@@ -181,12 +191,23 @@ with JListBuilder with JSetBuilder with JMapBuilder {
     }
 
     "return same java set with primitives and self conversions" in {
-      checkSameInstance(setOf[JInt, util.HashSet[JInt]](1, 2))
-      checkSameInstance(setOf[JInt, util.TreeSet[JInt]](1, 2))
-      checkSameInstance(setOf[JInt, util.LinkedHashSet[JInt]](1, 2))
-
-      class A
-      checkSameInstance(setOf[A, util.HashSet[A]](new A))
+      {
+        val javaSet = setOf[JInt, util.HashSet[JInt]](1, 2)
+        javaSet.deepAsScala.asJava should be theSameInstanceAs javaSet
+      }
+      {
+        val javaSet = setOf[JInt, util.TreeSet[JInt]](1, 2)
+        javaSet.deepAsScala.asJava should be theSameInstanceAs javaSet
+      }
+      {
+        val javaSet = setOf[JInt, util.LinkedHashSet[JInt]](1, 2)
+        javaSet.deepAsScala.asJava should be theSameInstanceAs javaSet
+      }
+      {
+        class A
+        val javaSet = setOf[A, util.LinkedHashSet[A]](new A)
+        javaSet.deepAsScala.asJava should be theSameInstanceAs javaSet
+      }
     }
 
     "return immutable set if asked" in {
@@ -201,16 +222,12 @@ with JListBuilder with JSetBuilder with JMapBuilder {
 
     def acceptMMapOf[A, B](sm: MMap[A, B]) = ()
 
-    def checkMutableMap[JM <: JMap[Int, String] : ClassTag](): Unit = {
-      val jMap = mapOf[Int, String, JM](2 -> "two")
+    def checkMutableMap[JM <: JMap[JInt, String] : ClassTag](): Unit = {
+      val jMap = mapOf[JInt, String, JM](ji(2) -> "two")
       jMap should be(JMap(2 -> "two"))
 
       jMap.deepAsScala update(5, "five")
       jMap should be(JMap(2 -> "two", 5 -> "five"))
-    }
-
-    def checkSameInstance(javaMap: JMap[_, _]): Unit = {
-      javaMap.deepAsScala.asJava should be theSameInstanceAs javaMap
     }
 
     "convert maps of primitives properly" in {
@@ -244,22 +261,39 @@ with JListBuilder with JSetBuilder with JMapBuilder {
     }
 
     "keep mutable maps mutable" in {
-      checkMutableMap[util.HashMap[Int, String]]()
-      checkMutableMap[util.IdentityHashMap[Int, String]]()
-      checkMutableMap[util.LinkedHashMap[Int, String]]()
-      checkMutableMap[util.TreeMap[Int, String]]()
-      checkMutableMap[util.WeakHashMap[Int, String]]()
+      checkMutableMap[util.HashMap[JInt, String]]()
+      checkMutableMap[util.IdentityHashMap[JInt, String]]()
+      checkMutableMap[util.LinkedHashMap[JInt, String]]()
+      checkMutableMap[util.TreeMap[JInt, String]]()
+      checkMutableMap[util.WeakHashMap[JInt, String]]()
     }
 
     "return same mutable scala map with primitives and self conversions" in {
-      checkSameInstance(mapOf[Int, String, util.HashMap[Int, String]](1 -> "one"))
-      checkSameInstance(mapOf[Int, String, util.IdentityHashMap[Int, String]](1 -> "one"))
-      checkSameInstance(mapOf[Int, String, util.LinkedHashMap[Int, String]](1 -> "one"))
-      checkSameInstance(mapOf[Int, String, util.TreeMap[Int, String]](1 -> "one"))
-      checkSameInstance(mapOf[Int, String, util.WeakHashMap[Int, String]](1 -> "one"))
-
-      class A
-      checkSameInstance(mapOf[A, String, util.HashMap[A, String]](new A -> "a"))
+      {
+        val javaMap = mapOf[JInt, String, util.HashMap[JInt, String]](ji(1) -> "one")
+        javaMap.deepAsScala.asJava should be theSameInstanceAs javaMap
+      }
+      {
+        val javaMap = mapOf[JInt, String, util.IdentityHashMap[JInt, String]](ji(1) -> "one")
+        javaMap.deepAsScala.asJava should be theSameInstanceAs javaMap
+      }
+      {
+        val javaMap = mapOf[JInt, String, util.LinkedHashMap[JInt, String]](ji(1) -> "one")
+        javaMap.deepAsScala.asJava should be theSameInstanceAs javaMap
+      }
+      {
+        val javaMap = mapOf[JInt, String, util.TreeMap[JInt, String]](ji(1) -> "one")
+        javaMap.deepAsScala.asJava should be theSameInstanceAs javaMap
+      }
+      {
+        val javaMap = mapOf[JInt, String, util.WeakHashMap[JInt, String]](ji(1) -> "one")
+        javaMap.deepAsScala.asJava should be theSameInstanceAs javaMap
+      }
+      {
+        class A
+        val javaMap = mapOf[A, String, util.HashMap[A, String]](new A -> "a")
+        javaMap.deepAsScala.asJava should be theSameInstanceAs javaMap
+      }
     }
 
     "return immutable map if asked" in {

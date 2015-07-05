@@ -1,5 +1,8 @@
 package com.daodecode.scalaj
 
+/**
+ * Type aliases used for convinience and name conflicts resolution
+ */
 trait JavaAliases {
   type JList[A] = java.util.List[A]
   type JSet[A] = java.util.Set[A]
@@ -15,4 +18,7 @@ trait JavaAliases {
   type JBoolean = java.lang.Boolean
 }
 
+/**
+ * Companion object for easy import
+ */
 object JavaAliases extends JavaAliases
