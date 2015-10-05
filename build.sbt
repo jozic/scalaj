@@ -1,9 +1,7 @@
-import com.typesafe.sbt.SbtPgp.PgpKeys._
 import org.scoverage.coveralls.CoverallsPlugin._
-import sbtrelease.ReleasePlugin._
-import sbtrelease.ReleaseStateTransformations._
+import scoverage._
+import ReleaseTransformations._
 import sbtrelease._
-import scoverage.ScoverageSbtPlugin._
 import xerial.sbt.Sonatype._
 import scala.xml.{Node => XmlNode, NodeSeq => XmlNodeSeq, _}
 import scala.xml.transform.{RewriteRule, RuleTransformer}
@@ -12,20 +10,20 @@ val coverageSettings = Seq(
 
   CoverallsKeys.coverallsTokenFile := Some("./token.txt"),
 
-  ScoverageKeys.coverageMinimum := 70,
+  ScoverageKeys.coverageMinimum := 95,
 
   ScoverageKeys.coverageFailOnMinimum := true,
 
   ScoverageKeys.coverageHighlighting := true
 )
 
-val releaseSettings = ReleasePlugin.releaseSettings ++ Seq(
+val releaseSettings = Seq(
 
-  ReleaseKeys.crossBuild := true,
+  releaseCrossBuild := true,
 
-  ReleaseKeys.publishArtifactsAction := publishSigned.value,
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
 
-  ReleaseKeys.releaseProcess := Seq[ReleaseStep](
+  releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,
     runClean,
@@ -59,18 +57,6 @@ val publishSettings = sonatypeSettings ++ Seq(
       override def transform(node: XmlNode): XmlNodeSeq = node match {
         case e: Elem
           if e.label == "dependency" && e.child.exists(child => child.label == "groupId" && child.text == "org.scoverage") => XmlNodeSeq.Empty
-        case e: Elem
-          if e.label == "developers" =>
-          <developers>
-            { developers.value.map { dev =>
-              <developer>
-                <id>{ dev.id }</id>
-                <name>{ dev.name }</name>
-                <email>{ dev.email }</email>
-                <url>{ dev.url }</url>
-              </developer>
-            }}
-          </developers>
         case _ => node
       }
     }).transform(node).head
@@ -81,9 +67,9 @@ val publishSettings = sonatypeSettings ++ Seq(
 val commonSettings = Seq (
   organization := "com.daodecode",
 
-  scalaVersion := "2.11.6",
+  scalaVersion := "2.11.7",
 
-  crossScalaVersions := Seq("2.10.5", "2.11.6")
+  crossScalaVersions := Seq("2.10.6", "2.11.7")
 ) ++ releaseSettings
 
 val moduleSettings = commonSettings ++ Seq(
@@ -91,7 +77,7 @@ val moduleSettings = commonSettings ++ Seq(
 
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
 
-  libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+  libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.5" % "test"
 ) ++ publishSettings ++ coverageSettings
 
 lazy val scalaj = project.in(file(".")).aggregate(`scalaj-collection`, `scalaj-google-optional`)
