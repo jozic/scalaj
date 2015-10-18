@@ -68,14 +68,14 @@ val immutableScalaBoo: Set[Option[immutable.Seq[Double]]] = boo.deepAsScalaImmut
 
 ### sbt
 ```
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.1"
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.2"
 ```
 ### maven
 ``` xml
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_2.10</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 or
@@ -83,7 +83,7 @@ or
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_2.11</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 
@@ -110,14 +110,14 @@ then add snapshot as a dependency
 
 ### sbt
 ```
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.2-SNAPSHOT"
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.3-SNAPSHOT"
 ```
 ### maven
 ``` xml
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_2.10</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.3-SNAPSHOT</version>
 </dependency>
 ```
 or
@@ -125,7 +125,7 @@ or
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_2.11</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.3-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -136,14 +136,14 @@ or
 
 ### sbt
 ```
-libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.1"
+libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.2"
 ```
 ### maven
 ``` xml
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_2.10</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 or
@@ -151,7 +151,7 @@ or
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_2.11</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 
@@ -178,14 +178,14 @@ then add snapshot as a dependency
 
 ### sbt
 ```
-libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.2-SNAPSHOT"
+libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.3-SNAPSHOT"
 ```
 ### maven
 ``` xml
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_2.10</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.3-SNAPSHOT</version>
 </dependency>
 ```
 or
@@ -193,7 +193,7 @@ or
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_2.11</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.1.3-SNAPSHOT</version>
 </dependency>
 ```
 
