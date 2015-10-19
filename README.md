@@ -1,11 +1,11 @@
-scalaj [![Build Status](https://travis-ci.org/jozic/scalaj.svg?branch=master)](https://travis-ci.org/jozic/scalaj) [![Coverage Status](https://coveralls.io/repos/jozic/scalaj/badge.svg)](https://coveralls.io/r/jozic/scalaj)
+ScalaJ Converters [![Build Status](https://travis-ci.org/jozic/scalaj.svg?branch=master)](https://travis-ci.org/jozic/scalaj) [![Coverage Status](https://coveralls.io/repos/jozic/scalaj/badge.svg)](https://coveralls.io/r/jozic/scalaj)
 =================
 
 ###When JavaConverters is not enough...
 
 If you work on a Java/Scala mixed project you can find yourself converting
-java collections and/or primitives to/from corresponding scala classes or vice versa.
-JavaConverters is your friends here, but it's not always enough
+java collections and/or primitive wrappers to/from corresponding scala classes or vice versa.
+JavaConverters is your friend here, but it's not always good enough.
 
 If you are tired of doing something like this
 
@@ -32,15 +32,28 @@ Now you can do
 ```
 import com.daodecode.scalaj.collection._
 
+def iTakeInt(i: Int) = { ... }
+
+val something = someJavaListOfJavaIntegers.deepAsScala.map(iTakeInt)
+```
+
+and 
+
+```
+import com.daodecode.scalaj.collection._
+
 val something: mutable.Map[Long, Buffer] = 
   someJavaMapOfJavaLongsToJavaLists.deepAsScala
 ```
 
-scalaj will go all the way down converting every nested collection or primitive type.  
-Of course you should be ready to pay some cost for all this conversions
+ScalaJ Converters will go all the way down converting every nested collection or primitive type.  
+Of course you should be ready to pay some cost for all these conversions.
 
-having `scalaj-googloptional` in classpath you can add [guava Optionals](https://github.com/google/guava/blob/master/guava/src/com/google/common/base/Optional.java) to your
-funky data structures and convert between them and scala versions all the way down and back
+Import `import com.daodecode.scalaj.collection._` aslo brings standard `JavaConverters._` in scope, 
+so you can use plain `asJava/asScala` if you don't have nested collections or collections of primitives.
+
+Having `scalaj-googloptional` in classpath you can add [guava Optionals](https://github.com/google/guava/blob/master/guava/src/com/google/common/base/Optional.java) to your
+funky data structures and convert between them and scala versions all the way down and back.
 
 ```
 val foo: java.util.Set[Optional[java.lang.Double] = ...
