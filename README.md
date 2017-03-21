@@ -1,7 +1,7 @@
 ScalaJ Converters [![Build Status](https://travis-ci.org/jozic/scalaj.svg?branch=master)](https://travis-ci.org/jozic/scalaj) [![Coverage Status](https://coveralls.io/repos/jozic/scalaj/badge.svg)](https://coveralls.io/r/jozic/scalaj)
 =================
 
-###When JavaConverters is not enough...
+### When JavaConverters is not enough...
 
 If you work on a Java/Scala mixed project you can find yourself converting
 java collections and/or primitive wrappers to/from corresponding scala classes or vice versa.
@@ -74,10 +74,10 @@ import com.daodecode.scalaj.collection.immutable._
 val immutableScalaBoo: Set[Option[immutable.Seq[Double]]] = boo.deepAsScalaImmutable
 ```
 
-#scalaj-collection
+# scalaj-collection
 
 
-##Latest stable release
+## Latest stable release
 
 ### sbt
 ```
@@ -100,7 +100,7 @@ or
 </dependency>
 ```
 
-##Latest snapshot
+## Latest snapshot
 
 First add sonatype snapshots repository to your settings
 
@@ -143,9 +143,9 @@ or
 ```
 
 
-#scalaj-googleoptional
+# scalaj-googleoptional
 
-##Latest stable release
+## Latest stable release
 
 ### sbt
 ```
@@ -168,7 +168,7 @@ or
 </dependency>
 ```
 
-##Latest snapshot
+## Latest snapshot
 
 First add sonatype snapshots repository to your settings
 
@@ -211,7 +211,7 @@ or
 ```
 
 
-##Related projects
+## Related projects
 
 https://github.com/softprops/guavapants  
 
