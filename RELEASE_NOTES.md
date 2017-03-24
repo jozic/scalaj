@@ -10,4 +10,5 @@
 
 0.1.3
  - support scala 2.12 
+ - Add java optional module
  

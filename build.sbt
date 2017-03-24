@@ -71,7 +71,8 @@ lazy val scalaj =
   project.in(file("."))
     .aggregate(
       `scalaj-collection`,
-      `scalaj-google-optional`)
+      `scalaj-google-optional`,
+      `scalaj-java-optional`)
     .settings(
       publishArtifact := false,
       publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))),
@@ -81,4 +82,7 @@ lazy val scalaj =
 lazy val `scalaj-collection` = project.settings(moduleSettings)
 
 lazy val `scalaj-google-optional` = project.settings(moduleSettings).
+  dependsOn(`scalaj-collection` % "compile->compile;test->test")
+
+lazy val `scalaj-java-optional` = project.settings(moduleSettings).
   dependsOn(`scalaj-collection` % "compile->compile;test->test")
