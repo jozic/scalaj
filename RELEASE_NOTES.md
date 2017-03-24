@@ -7,3 +7,7 @@
 0.1.2
  - Fix a bug with conversion in Arrays
  - Add scaladocs
+
+0.1.3
+ - support scala 2.12 
+ 

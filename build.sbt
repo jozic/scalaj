@@ -1,10 +1,6 @@
-import org.scoverage.coveralls.CoverallsPlugin._
 import scoverage._
 import ReleaseTransformations._
-import sbtrelease._
 import xerial.sbt.Sonatype._
-import scala.xml.{Node => XmlNode, NodeSeq => XmlNodeSeq, _}
-import scala.xml.transform.{RewriteRule, RuleTransformer}
 
 val coverageSettings = Seq(
 
@@ -50,42 +46,37 @@ val publishSettings = sonatypeSettings ++ Seq(
 
   scmInfo := homepage.value.map(ScmInfo(_, "scm:git:git@github.com:jozic/scalaj.git")),
 
-  licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/BSD-3-Clause")),
-
-  pomPostProcess := { (node: XmlNode) =>
-    new RuleTransformer(new RewriteRule {
-      override def transform(node: XmlNode): XmlNodeSeq = node match {
-        case e: Elem
-          if e.label == "dependency" && e.child.exists(child => child.label == "groupId" && child.text == "org.scoverage") => XmlNodeSeq.Empty
-        case _ => node
-      }
-    }).transform(node).head
-  }
-
+  licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/BSD-3-Clause"))
 )
 
-val commonSettings = Seq (
+val commonSettings = Seq(
   organization := "com.daodecode",
-
-  scalaVersion := "2.11.7",
-
-  crossScalaVersions := Seq("2.10.6", "2.11.7")
+  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.1")
 ) ++ releaseSettings
 
 val moduleSettings = commonSettings ++ Seq(
-  scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xlint", "-Xfatal-warnings"),
+  scalacOptions ++= Seq(
+    "-deprecation",
+    "-unchecked",
+    "-Xlint",
+    "-Xfatal-warnings"
+  ),
 
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
 
-  libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.5" % "test"
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 ) ++ publishSettings ++ coverageSettings
 
-lazy val scalaj = project.in(file(".")).aggregate(`scalaj-collection`, `scalaj-google-optional`)
-  .settings(
-    publishArtifact := false,
-    publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))),
-    commonSettings
-  )
+lazy val scalaj =
+  project.in(file("."))
+    .aggregate(
+      `scalaj-collection`,
+      `scalaj-google-optional`)
+    .settings(
+      publishArtifact := false,
+      publishTo := Some(Resolver.file("Unused transient repository", file("target/unusedrepo"))),
+      commonSettings
+    )
 
 lazy val `scalaj-collection` = project.settings(moduleSettings)
 

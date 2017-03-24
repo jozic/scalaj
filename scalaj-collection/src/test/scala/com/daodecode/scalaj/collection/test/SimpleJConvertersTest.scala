@@ -104,7 +104,6 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
       acceptJListOf(mutable.UnrolledBuffer(1).deepAsJava)
 
       acceptJListOf(mutable.Queue(1).deepAsJava)
-      acceptJListOf(mutable.Stack(1).deepAsJava)
       acceptJListOf(mutable.ArrayStack(1).deepAsJava)
       acceptJListOf(mutable.ArraySeq(1).deepAsJava)
       acceptJListOf(mutable.MutableList(1).deepAsJava)
@@ -120,7 +119,6 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
       checkMutableSeq[mutable.ResizableArray[Int]]
 
       checkMutableSeq[mutable.Queue[Int]]
-      checkMutableSeq[mutable.Stack[Int]]
       checkMutableSeq[mutable.ArrayStack[Int]]
 
       checkMutableSeq[mutable.Buffer[Int]]
