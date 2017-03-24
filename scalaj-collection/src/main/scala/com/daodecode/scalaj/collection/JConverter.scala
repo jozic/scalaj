@@ -1,7 +1,6 @@
 package com.daodecode.scalaj.collection
 
 import scala.collection.{Map => GenMap, Seq => GenSeq, Set => GenSet}
-import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
 /**

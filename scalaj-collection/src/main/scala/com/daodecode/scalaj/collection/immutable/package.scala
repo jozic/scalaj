@@ -1,7 +1,6 @@
 package com.daodecode.scalaj.collection
 
 import scala.collection.immutable.{Seq => ImSeq}
-import scala.language.implicitConversions
 
 /**
   * Importing `com.daodecode.scalaj.collection.immutable._` allows to use "extension" methods deepAsScalaImmutable,

@@ -1,7 +1,6 @@
 package com.daodecode.scalaj.collection
 
 import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Set => MSet}
-import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
 /**

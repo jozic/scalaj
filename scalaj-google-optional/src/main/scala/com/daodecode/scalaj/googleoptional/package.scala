@@ -3,8 +3,6 @@ package com.daodecode.scalaj
 import com.daodecode.scalaj.collection._
 import com.google.common.base.{Optional => GOption}
 
-import scala.language.implicitConversions
-
 /**
  * Importing `com.daodecode.scalaj.googleoptional._` allows to use "extension" methods
  * asJava/asScala, deepAsScala/deepAsJava.
