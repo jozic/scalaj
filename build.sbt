@@ -62,11 +62,19 @@ val commonSettings = Seq(
 ) ++ releaseSettings
 
 val moduleSettings = commonSettings ++ Seq(
-  scalacOptions ++= Seq(
-    "-deprecation",
-    "-unchecked",
+  scalacOptions := Seq(
     "-Xlint",
-    "-Xfatal-warnings"
+    "-unchecked",
+    "-deprecation",
+    "-Xfatal-warnings",
+    "-Ywarn-inaccessible",
+    "-Ywarn-dead-code",
+    "-Ywarn-adapted-args",
+    "-Ywarn-nullary-unit",
+    "-feature",
+    "-Ywarn-unused",
+    "-Ywarn-unused-import",
+    "-encoding", "UTF-8"
   ),
   libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
 ) ++ publishSettings ++ coverageSettings

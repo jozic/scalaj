@@ -8,7 +8,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.collection.mutable.{Map => MMap, Set => MSet}
 
-class ConvertersTest extends WordSpec with Matchers with JSetBuilder with JMapBuilder {
+class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with JMapBuilder {
 
   def jb(b: Byte): JByte = b
 

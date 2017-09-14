@@ -5,7 +5,6 @@ import java.util.Arrays.asList
 
 import scala.collection.immutable.{Seq => ImSeq}
 import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Set => MSet}
-import scala.language.higherKinds
 import scala.reflect.ClassTag
 
 import com.daodecode.scalaj.collection._
@@ -16,10 +15,7 @@ with JListBuilder with JSetBuilder with JMapBuilder {
 
   "JListConverters" should {
 
-    def acceptBufferOf[A](sb: MBuffer[A]) = {
-      val clazz = sb.getClass
-      clazz
-    }
+    def acceptBufferOf[A](sb: MBuffer[A]) = sb
 
     def checkMutableBuffer[JL <: JList[Int] : ClassTag](): Unit = {
       val jList: JL = listOf(2)
@@ -93,7 +89,7 @@ with JListBuilder with JSetBuilder with JMapBuilder {
 
   "ArrayConverters" should {
 
-    def acceptArrayOf[A](ar: Array[A]) = ()
+    def acceptArrayOf[A](ar: Array[A]) = ar
 
     "convert arrays of primitives properly" in {
       acceptArrayOf[Byte](Array[JByte](jb(1), jb(2), jb(3)).deepAsScala)
@@ -142,7 +138,7 @@ with JListBuilder with JSetBuilder with JMapBuilder {
 
   "JSetConverters" should {
 
-    def acceptMSetOf[A](ms: MSet[A]) = ()
+    def acceptMSetOf[A](ms: MSet[A]) = ms
 
     def checkMutableSet[JS <: JSet[Int] : ClassTag](): Unit = {
       val mSet: JS = setOf(2)
@@ -220,7 +216,7 @@ with JListBuilder with JSetBuilder with JMapBuilder {
 
   "JMapConverters" should {
 
-    def acceptMMapOf[A, B](sm: MMap[A, B]) = ()
+    def acceptMMapOf[A, B](sm: MMap[A, B]) = sm
 
     def checkMutableMap[JM <: JMap[JInt, String] : ClassTag](): Unit = {
       val jMap = mapOf[JInt, String, JM](ji(2) -> "two")

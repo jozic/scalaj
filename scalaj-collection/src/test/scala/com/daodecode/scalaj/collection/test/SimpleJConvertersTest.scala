@@ -5,16 +5,12 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.collection.generic.CanBuildFrom
 import scala.collection.{immutable, mutable}
-import scala.language.{higherKinds, reflectiveCalls}
 
 class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "SeqConverters" should {
 
-    def acceptJListOf[A](jl: JList[A]) = {
-      val clazz = jl.getClass
-      clazz
-    }
+    def acceptJListOf[A](jl: JList[A]) = jl
 
     def checkMutableSeq[MS <: mutable.Seq[Int]](implicit cbf: CanBuildFrom[MS, Int, MS]): Unit = {
       val mSeq = (cbf() += 2).result()
@@ -161,7 +157,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "ArrayConverters" should {
 
-    def acceptArrayOf[A](ar: Array[A]) = ()
+    def acceptArrayOf[A](ar: Array[A]) = ar
 
     "convert arrays of primitives properly" in {
       "acceptArrayOf[JByte](Array[Byte](1, 2, 3))" shouldNot compile
@@ -227,7 +223,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "SetConverters" should {
 
-    def acceptJSetOf[A](js: JSet[A]) = ()
+    def acceptJSetOf[A](js: JSet[A]) = js
 
     def checkMutableSet[MS <: mutable.Set[Int]](implicit cbf: CanBuildFrom[MS, Int, MS]): Unit = {
       val mSet = (cbf() += 2).result()
@@ -340,7 +336,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "MapConverters" should {
 
-    def acceptJMapOf[A, B](jm: JMap[A, B]) = ()
+    def acceptJMapOf[A, B](jm: JMap[A, B]) = jm
 
     def checkMutableMap[MM <: mutable.Map[Int, String]](implicit cbf: CanBuildFrom[MM, (Int, String), MM]): Unit = {
       val mMap = (cbf() += 2 -> "two").result()
