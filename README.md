@@ -85,7 +85,7 @@ val immutableScalaBoo: Set[Option[immutable.Seq[Double]]] = boo.deepAsScalaImmut
 
 ### sbt
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.2"
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.2.0"
 ```
 ### maven
 
@@ -103,7 +103,7 @@ set `<scala.binary.version>` property to scala version you need, like
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_${scala.binary.version}</artifactId>
-    <version>0.1.2</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -116,7 +116,7 @@ set `<scala.binary.version>` property to scala version you need, like
 ### sbt
 
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.2"
+libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.2.0"
 ```
 ### maven
 
@@ -132,7 +132,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.2"
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_${scala.binary.version}</artifactId>
-    <version>0.1.2</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -164,7 +164,7 @@ then add snapshot as a dependency
 ### sbt
 
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.3-SNAPSHOT"
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.2.1-SNAPSHOT"
 ```
 
 ### maven
@@ -181,7 +181,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.3-SNAPSHOT"
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_${scala.binary.version}</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
+    <version>0.2.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -190,7 +190,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.3-SNAPSHOT"
 ### sbt
 
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.3-SNAPSHOT"
+libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.2.1-SNAPSHOT"
 ```
 ### maven
 
@@ -206,7 +206,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.3-SNAPS
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_${scala.binary.version}</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
+    <version>0.2.1-SNAPSHOT</version>
 </dependency>
 ```
 
