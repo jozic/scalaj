@@ -20,7 +20,6 @@ package object javaoptional {
 
     def deepAsJava[B](implicit converter: JConverter[A, B]): JOption[B] =
       option.fold(JOption.empty[B])(a => JOption.ofNullable(converter.convert(a)))
-
   }
 
   implicit class DeepJOptionAsOption[A](val optional: JOption[A]) extends AnyVal {

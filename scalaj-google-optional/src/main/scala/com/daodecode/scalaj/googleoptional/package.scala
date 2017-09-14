@@ -12,7 +12,7 @@ package object googleoptional {
 
   type GOption[A] = com.google.common.base.Optional[A]
 
-  implicit class DeepOptionAsOptional[A](val option: Option[A]) extends AnyVal {
+  implicit class DeepOptionAsGOption[A](val option: Option[A]) extends AnyVal {
 
     /**
      * Converts given [[scala.Option]] to [[com.google.common.base.Optional]].
@@ -52,7 +52,7 @@ package object googleoptional {
       option.fold(GOption.absent[B])(a => GOption.fromNullable(converter.convert(a)))
   }
 
-  implicit class DeepOptionalAsOption[A](val optional: GOption[A]) extends AnyVal {
+  implicit class DeepGOptionAsOption[A](val optional: GOption[A]) extends AnyVal {
 
     /**
      * Converts [[com.google.common.base.Optional]] to [[scala.Option]].

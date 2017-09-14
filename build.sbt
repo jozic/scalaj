@@ -51,7 +51,7 @@ val publishSettings = sonatypeSettings ++ Seq(
 
 val commonSettings = Seq(
   organization := "com.daodecode",
-  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.1")
+  crossScalaVersions := Seq("2.11.11", "2.12.3")
 ) ++ releaseSettings
 
 val moduleSettings = commonSettings ++ Seq(
@@ -62,9 +62,7 @@ val moduleSettings = commonSettings ++ Seq(
     "-Xfatal-warnings"
   ),
 
-  javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
-
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 ) ++ publishSettings ++ coverageSettings
 
 lazy val scalaj =
