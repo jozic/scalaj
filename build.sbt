@@ -17,8 +17,6 @@ val releaseSettings = Seq(
 
   releaseCrossBuild := true,
 
-  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-
   releaseProcess := Seq[ReleaseStep](
     checkSnapshotDependencies,
     inquireVersions,
@@ -27,9 +25,10 @@ val releaseSettings = Seq(
     setReleaseVersion,
     commitReleaseVersion,
     tagRelease,
-    publishArtifacts,
+    releaseStepCommand("publishSigned"),
     setNextVersion,
     commitNextVersion,
+    releaseStepCommand("sonatypeReleaseAll"),
     pushChanges
   )
 )
@@ -46,12 +45,20 @@ val publishSettings = sonatypeSettings ++ Seq(
 
   scmInfo := homepage.value.map(ScmInfo(_, "scm:git:git@github.com:jozic/scalaj.git")),
 
-  licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/BSD-3-Clause"))
+  licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/BSD-3-Clause")),
+
+  publishTo := Some(
+    if (isSnapshot.value)
+      Opts.resolver.sonatypeSnapshots
+    else
+      Opts.resolver.sonatypeStaging
+  )
 )
 
 val commonSettings = Seq(
   organization := "com.daodecode",
-  crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.1")
+  scalaVersion := "2.11.11",
+  crossScalaVersions := Seq(scalaVersion.value, "2.12.3")
 ) ++ releaseSettings
 
 val moduleSettings = commonSettings ++ Seq(
@@ -61,10 +68,7 @@ val moduleSettings = commonSettings ++ Seq(
     "-Xlint",
     "-Xfatal-warnings"
   ),
-
-  javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
-
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
 ) ++ publishSettings ++ coverageSettings
 
 lazy val scalaj =
@@ -82,3 +86,5 @@ lazy val `scalaj-collection` = project.settings(moduleSettings)
 
 lazy val `scalaj-google-optional` = project.settings(moduleSettings).
   dependsOn(`scalaj-collection` % "compile->compile;test->test")
+
+addCommandAlias("scoverage", ";clean;coverage;test;coverageReport")

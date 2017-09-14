@@ -1,19 +1,18 @@
 language: scala
 
 scala:
-  - 2.10.6
-  - 2.11.8
+  - 2.11.11
 
 jdk:
   - oraclejdk7
 
 matrix:
   include:
-  - scala: 2.12.1
+  - scala: 2.12.3
     jdk: oraclejdk8
 
 script:
-  - "sbt clean coverage test"
+  - "sbt scoverage"
   - "sbt coverageAggregate"
 
 after_success: "sbt coveralls"

@@ -8,6 +8,7 @@
  - Fix a bug with conversion in Arrays
  - Add scaladocs
 
-0.1.3
+0.2.0
  - support scala 2.12 
+ - drop support for scala 2.10
  

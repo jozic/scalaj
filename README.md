@@ -9,7 +9,7 @@ JavaConverters is your friend here, but it's not always good enough.
 
 If you are tired of doing something like this
 
-```
+```scala
 import scala.collection.JavaConverters._
 
 def iTakeInt(i: Int) = { ... }
@@ -19,7 +19,7 @@ val something = someJavaListOfJavaIntegers.asScala.map(iTakeInt(_))
 
 or this
 
-```
+```scala
 import scala.collection.JavaConverters._
 
 val something: mutable.Map[java.lang.Long, Buffer] = 
@@ -29,7 +29,7 @@ val something: mutable.Map[java.lang.Long, Buffer] =
 look no more!  
 Now you can do
 
-```
+```scala
 import com.daodecode.scalaj.collection._
 
 def iTakeInt(i: Int) = { ... }
@@ -39,7 +39,7 @@ val something = someJavaListOfJavaIntegers.deepAsScala.map(iTakeInt)
 
 and 
 
-```
+```scala
 import com.daodecode.scalaj.collection._
 
 val something: mutable.Map[Long, Buffer] = 
@@ -55,7 +55,7 @@ so you can use plain `asJava/asScala` if you don't have nested collections or co
 Having `scalaj-googloptional` in classpath you can add [guava Optionals](https://github.com/google/guava/blob/master/guava/src/com/google/common/base/Optional.java) to your
 funky data structures and convert between them and scala versions all the way down and back.
 
-```
+```scala
 val foo: java.util.Set[Optional[java.lang.Double] = ...
 
 import com.daodecode.scalaj.googleoptional._
@@ -65,7 +65,7 @@ val scalaFoo: mutable.Set[Option[Double]] = foo.deepAsScala
 
 If you want you scala collections ~~well-done~~ immutable, you can do it as well
 
-```
+```scala
 val boo: java.util.Set[Optional[java.util.List[java.lang.Double]] = ...
 
 import com.daodecode.scalaj.googleoptional._
@@ -74,111 +74,81 @@ import com.daodecode.scalaj.collection.immutable._
 val immutableScalaBoo: Set[Option[immutable.Seq[Double]]] = boo.deepAsScalaImmutable
 ```
 
-# scalaj-collection
 
+# Latest stable release
 
-## Latest stable release
+## scalaj-collection
+
+| 2.10 | 2.11 | 2.12 |
+|------|------|------|
+|[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.10) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.11) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.12) |
 
 ### sbt
-```
+```scala
 libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.2"
 ```
 ### maven
-``` xml
+
+set `<scala.binary.version>` property to scala version you need, like
+
+```xml
+<properties>
+    <scala.binary.version>2.12</scala.binary.version>
+</properties>
+```
+
+ and then in `dependencies` add
+
+```xml
 <dependency>
     <groupId>com.daodecode</groupId>
-    <artifactId>scalaj-collection_2.10</artifactId>
+    <artifactId>scalaj-collection_${scala.binary.version}</artifactId>
     <version>0.1.2</version>
 </dependency>
 ```
-or
-``` xml
-<dependency>
-    <groupId>com.daodecode</groupId>
-    <artifactId>scalaj-collection_2.11</artifactId>
-    <version>0.1.2</version>
-</dependency>
-```
 
-## Latest snapshot
+## scalaj-googleoptional
 
-First add sonatype snapshots repository to your settings
+| 2.10 | 2.11 | 2.12 |
+|------|------|------|
+|[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.10) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.11) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.12) |
 
 ### sbt
 
-`resolvers += Resolver.sonatypeRepo("snapshots")`
-
-### maven
-
-``` xml
-<repository>
-    <id>snapshots-repo</id>
-    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    <releases><enabled>false</enabled></releases>
-    <snapshots><enabled>true</enabled></snapshots>
-</repository>
-```
-
-then add snapshot as a dependency
-
-### sbt
-```
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.3-SNAPSHOT"
-```
-### maven
-``` xml
-<dependency>
-    <groupId>com.daodecode</groupId>
-    <artifactId>scalaj-collection_2.10</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
-</dependency>
-```
-or
-``` xml
-<dependency>
-    <groupId>com.daodecode</groupId>
-    <artifactId>scalaj-collection_2.11</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
-</dependency>
-```
-
-
-# scalaj-googleoptional
-
-## Latest stable release
-
-### sbt
-```
+```scala
 libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.2"
 ```
 ### maven
-``` xml
-<dependency>
-    <groupId>com.daodecode</groupId>
-    <artifactId>scalaj-googleoptional_2.10</artifactId>
-    <version>0.1.2</version>
-</dependency>
+
+```xml
+<properties>
+    <scala.binary.version>2.12</scala.binary.version>
+</properties>
 ```
-or
-``` xml
+
+ and then in `dependencies` add
+
+```xml
 <dependency>
     <groupId>com.daodecode</groupId>
-    <artifactId>scalaj-googleoptional_2.11</artifactId>
+    <artifactId>scalaj-googleoptional_${scala.binary.version}</artifactId>
     <version>0.1.2</version>
 </dependency>
 ```
 
-## Latest snapshot
+# Latest snapshot
 
 First add sonatype snapshots repository to your settings
 
 ### sbt
 
-`resolvers += Resolver.sonatypeRepo("snapshots")`
+```scala
+resolvers += Resolver.sonatypeRepo("snapshots")
+```
 
 ### maven
 
-``` xml
+```xml
 <repository>
     <id>snapshots-repo</id>
     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -189,29 +159,58 @@ First add sonatype snapshots repository to your settings
 
 then add snapshot as a dependency
 
+## scalaj-collection
+
 ### sbt
+
+```scala
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.1.3-SNAPSHOT"
 ```
+
+### maven
+
+```xml
+<properties>
+    <scala.binary.version>2.12</scala.binary.version>
+</properties>
+```
+
+ and then in `dependencies` add
+
+```xml
+<dependency>
+    <groupId>com.daodecode</groupId>
+    <artifactId>scalaj-collection_${scala.binary.version}</artifactId>
+    <version>0.1.3-SNAPSHOT</version>
+</dependency>
+```
+
+## scalaj-googleoptional
+
+### sbt
+
+```scala
 libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.1.3-SNAPSHOT"
 ```
 ### maven
-``` xml
-<dependency>
-    <groupId>com.daodecode</groupId>
-    <artifactId>scalaj-googleoptional_2.10</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
-</dependency>
+
+```xml
+<properties>
+    <scala.binary.version>2.12</scala.binary.version>
+</properties>
 ```
-or
-``` xml
+
+ and then in `dependencies` add
+
+```xml
 <dependency>
     <groupId>com.daodecode</groupId>
-    <artifactId>scalaj-googleoptional_2.11</artifactId>
+    <artifactId>scalaj-googleoptional_${scala.binary.version}</artifactId>
     <version>0.1.3-SNAPSHOT</version>
 </dependency>
 ```
 
-
-## Related projects
+# Related projects
 
 https://github.com/softprops/guavapants  
 
