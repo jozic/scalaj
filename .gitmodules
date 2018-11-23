@@ -1,0 +1,3 @@
+[submodule "scalafmt-config"]
+	path = scalafmt-config
+	url = git@github.com:jozic/scalafmt-config.git
