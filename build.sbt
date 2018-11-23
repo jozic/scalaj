@@ -57,8 +57,8 @@ val publishSettings = sonatypeSettings ++ Seq(
 
 val commonSettings = Seq(
   organization := "com.daodecode",
-  scalaVersion := "2.11.11",
-  crossScalaVersions := Seq(scalaVersion.value, "2.12.4")
+  scalaVersion := "2.11.12",
+  crossScalaVersions := Seq(scalaVersion.value, "2.12.7")
 ) ++ releaseSettings
 
 val moduleSettings = commonSettings ++ Seq(
@@ -76,7 +76,7 @@ val moduleSettings = commonSettings ++ Seq(
     "-Ywarn-unused-import",
     "-encoding", "UTF-8"
   ),
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % "test"
+  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 ) ++ publishSettings ++ coverageSettings
 
 lazy val scalaj =
