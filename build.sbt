@@ -98,3 +98,5 @@ lazy val `scalaj-google-optional` = project.settings(moduleSettings).
 
 addCommandAlias("scoverage", ";clean;coverage;test;coverageReport")
 
+addCommandAlias("checkFormatting", ";scalafmtCheck;test:scalafmtCheck")
+
