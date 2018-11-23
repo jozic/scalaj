@@ -10,14 +10,13 @@ import scala.reflect.ClassTag
 import com.daodecode.scalaj.collection._
 import org.scalatest.{Matchers, WordSpec}
 
-class SimpleSConvertersTest extends WordSpec with Matchers
-with JListBuilder with JSetBuilder with JMapBuilder {
+class SimpleSConvertersTest extends WordSpec with Matchers with JListBuilder with JSetBuilder with JMapBuilder {
 
   "JListConverters" should {
 
     def acceptBufferOf[A](sb: MBuffer[A]) = sb
 
-    def checkMutableBuffer[JL <: JList[Int] : ClassTag](): Unit = {
+    def checkMutableBuffer[JL <: JList[Int]: ClassTag](): Unit = {
       val jList: JL = listOf(2)
       jList should be(JList(2))
 
@@ -33,8 +32,8 @@ with JListBuilder with JSetBuilder with JMapBuilder {
       acceptBufferOf[Short](asList[JShort](js(1), js(2), js(3)).deepAsScala)
       acceptBufferOf[Int](asList[JInt](1, 2, 3).deepAsScala)
       acceptBufferOf[Long](asList[JLong](1L, 2L, 3L).deepAsScala)
-      acceptBufferOf[Float](asList[JFloat](1F, 2F, 3F).deepAsScala)
-      acceptBufferOf[Double](asList[JDouble](1D, 2D, 3D).deepAsScala)
+      acceptBufferOf[Float](asList[JFloat](1f, 2f, 3f).deepAsScala)
+      acceptBufferOf[Double](asList[JDouble](1d, 2d, 3d).deepAsScala)
       acceptBufferOf[Char](asList[JChar]('a', 'b').deepAsScala)
       acceptBufferOf[Boolean](asList[JBoolean](true, false).deepAsScala)
     }
@@ -96,8 +95,8 @@ with JListBuilder with JSetBuilder with JMapBuilder {
       acceptArrayOf[Short](Array[JShort](js(1), js(2), js(3)).deepAsScala)
       acceptArrayOf[Int](Array[JInt](1, 2, 3).deepAsScala)
       acceptArrayOf[Long](Array[JLong](1L, 2L, 3L).deepAsScala)
-      acceptArrayOf[Float](Array[JFloat](1F, 2F, 3F).deepAsScala)
-      acceptArrayOf[Double](Array[JDouble](1D, 2D, 3D).deepAsScala)
+      acceptArrayOf[Float](Array[JFloat](1f, 2f, 3f).deepAsScala)
+      acceptArrayOf[Double](Array[JDouble](1d, 2d, 3d).deepAsScala)
       acceptArrayOf[Char](Array[JChar]('a', 'b').deepAsScala)
       acceptArrayOf[Boolean](Array[JBoolean](true, false).deepAsScala)
     }
@@ -125,7 +124,7 @@ with JListBuilder with JSetBuilder with JMapBuilder {
         javaArray.deepAsScala should be theSameInstanceAs javaArray
       }
       {
-        val javaArray = Array[Double](12D)
+        val javaArray = Array[Double](12d)
         javaArray.deepAsScala should be theSameInstanceAs javaArray
       }
       {
@@ -140,7 +139,7 @@ with JListBuilder with JSetBuilder with JMapBuilder {
 
     def acceptMSetOf[A](ms: MSet[A]) = ms
 
-    def checkMutableSet[JS <: JSet[Int] : ClassTag](): Unit = {
+    def checkMutableSet[JS <: JSet[Int]: ClassTag](): Unit = {
       val mSet: JS = setOf(2)
       mSet should be(JSet(2))
 
@@ -153,8 +152,8 @@ with JListBuilder with JSetBuilder with JMapBuilder {
       acceptMSetOf[Short](JSet[JShort](js(1), js(2), js(3)).deepAsScala)
       acceptMSetOf[Int](JSet(1, 2, 3).deepAsScala)
       acceptMSetOf[Long](JSet(1L, 2L, 3L).deepAsScala)
-      acceptMSetOf[Float](JSet(1F, 2F, 3F).deepAsScala)
-      acceptMSetOf[Double](JSet(1D, 2D, 3D).deepAsScala)
+      acceptMSetOf[Float](JSet(1f, 2f, 3f).deepAsScala)
+      acceptMSetOf[Double](JSet(1d, 2d, 3d).deepAsScala)
       acceptMSetOf[Char](JSet('a', 'b').deepAsScala)
       acceptMSetOf[Boolean](JSet(true, false).deepAsScala)
     }
@@ -218,18 +217,18 @@ with JListBuilder with JSetBuilder with JMapBuilder {
 
     def acceptMMapOf[A, B](sm: MMap[A, B]) = sm
 
-    def checkMutableMap[JM <: JMap[JInt, String] : ClassTag](): Unit = {
+    def checkMutableMap[JM <: JMap[JInt, String]: ClassTag](): Unit = {
       val jMap = mapOf[JInt, String, JM](ji(2) -> "two")
       jMap should be(JMap(2 -> "two"))
 
-      jMap.deepAsScala update(5, "five")
+      jMap.deepAsScala update (5, "five")
       jMap should be(JMap(2 -> "two", 5 -> "five"))
     }
 
     "convert maps of primitives properly" in {
       acceptMMapOf[Byte, Int](JMap[JByte, JInt](jb(1) -> 2).deepAsScala)
       acceptMMapOf[Short, Long](JMap[JShort, JLong](js(1) -> 2L).deepAsScala)
-      acceptMMapOf[Float, Double](JMap[JFloat, JDouble]((1F: JFloat) -> (2D: JDouble)).deepAsScala)
+      acceptMMapOf[Float, Double](JMap[JFloat, JDouble]((1f: JFloat) -> (2d: JDouble)).deepAsScala)
       acceptMMapOf[Boolean, Char](JMap[JBoolean, JChar]((true: JBoolean) -> ('t': JChar)).deepAsScala)
     }
 
@@ -295,7 +294,7 @@ with JListBuilder with JSetBuilder with JMapBuilder {
     "return immutable map if asked" in {
       import com.daodecode.scalaj.collection.immutable._
 
-      JMap[String, JDouble]("1" -> 1.0D).deepAsScalaImmutable: Map[String, Double]
+      JMap[String, JDouble]("1" -> 1.0d).deepAsScalaImmutable: Map[String, Double]
     }
   }
 

@@ -19,9 +19,9 @@ class ComplexJConvertersTest extends WordSpec with Matchers {
 
       List(MMap('a' -> 1)).deepAsJava: JList[JMap[JChar, JInt]]
 
-      List(Set(Array(12D))).deepAsJava: JList[JSet[Array[JDouble]]]
+      List(Set(Array(12d))).deepAsJava: JList[JSet[Array[JDouble]]]
 
-      List(Array(Set(12D))).deepAsJava: JList[Array[JSet[JDouble]]]
+      List(Array(Set(12d))).deepAsJava: JList[Array[JSet[JDouble]]]
 
       Array(List(Set(12L))).deepAsJava: Array[JList[JSet[JLong]]]
 
@@ -71,4 +71,3 @@ class ComplexJConvertersTest extends WordSpec with Matchers {
     }
   }
 }
-

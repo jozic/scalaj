@@ -14,18 +14,18 @@ trait JConverter[-A, +B] {
 }
 
 /**
- * Implementation of [[JConverter]] that casts A to B.
- * @tparam A Type convert from (represents Scala side)
- * @tparam B Type convert to (represents Java side)
- */
+  * Implementation of [[JConverter]] that casts A to B.
+  * @tparam A Type convert from (represents Scala side)
+  * @tparam B Type convert to (represents Java side)
+  */
 class JCastConverter[A, B] extends JConverter[A, B] {
   override def convert(a: A): B = a.asInstanceOf[B]
 }
 
 /**
- * Converter that "converts" A to A,
- * used as a fallback when there are no other implicit converters in scope
- */
+  * Converter that "converts" A to A,
+  * used as a fallback when there are no other implicit converters in scope
+  */
 object SelfJConverter extends JCastConverter[Any, Any]
 
 trait LowImplicitSelfJConverter {
@@ -34,8 +34,8 @@ trait LowImplicitSelfJConverter {
 }
 
 /**
- * Scala to Java converters for "primitive types
- */
+  * Scala to Java converters for "primitive types
+  */
 trait PrimitivesJConverter extends LowImplicitSelfJConverter {
 
   implicit object BytesConverter extends JCastConverter[Byte, JByte]
@@ -57,11 +57,11 @@ trait PrimitivesJConverter extends LowImplicitSelfJConverter {
 }
 
 /**
- * Companion object of [[JConverter]] to bring implicit converters in following order
- *  - collection converters defined here
- *  - converters for primitive types defined in [[PrimitivesJConverter]]
- *  - "self" converter for fallback
- */
+  * Companion object of [[JConverter]] to bring implicit converters in following order
+  *  - collection converters defined here
+  *  - converters for primitive types defined in [[PrimitivesJConverter]]
+  *  - "self" converter for fallback
+  */
 object JConverter extends PrimitivesJConverter {
 
   def apply[A, B](c: A => B): JConverter[A, B] = new JConverter[A, B] {
@@ -69,31 +69,33 @@ object JConverter extends PrimitivesJConverter {
   }
 
   /**
-   * @return converter for converting Scala [[scala.collection.Seq]] to Java [[JList]].
-   *         Given `converter` used to convert elements of Scala seq
-   */
+    * @return converter for converting Scala [[scala.collection.Seq]] to Java [[JList]].
+    *         Given `converter` used to convert elements of Scala seq
+    */
   implicit def seqConverter[A, B](implicit converter: JConverter[A, B]): JConverter[GenSeq[A], JList[B]] =
     JConverter[GenSeq[A], JList[B]](_.deepAsJava)
 
   /**
-   * @return converter for converting Scala [[scala.collection.Set]] to Java [[JSet]].
-   *         Given `converter` used to convert elements of Scala set
-   */
+    * @return converter for converting Scala [[scala.collection.Set]] to Java [[JSet]].
+    *         Given `converter` used to convert elements of Scala set
+    */
   implicit def setConverter[A, B](implicit converter: JConverter[A, B]): JConverter[GenSet[A], JSet[B]] =
     JConverter[GenSet[A], JSet[B]](_.deepAsJava)
 
   /**
-   * @return converter for converting Java [[scala.Array]] to Java [[scala.Array]] :).
-   *         Given `converter` used to convert elements of the array
-   */
+    * @return converter for converting Java [[scala.Array]] to Java [[scala.Array]] :).
+    *         Given `converter` used to convert elements of the array
+    */
   implicit def arrayConverter[A, B: ClassTag](implicit converter: JConverter[A, B]): JConverter[Array[A], Array[B]] =
     JConverter[Array[A], Array[B]](_.deepAsJava[B])
 
   /**
-   * @return converter for converting Scala [[scala.collection.Map]] to Java [[JMap]].
-   *         Given `converters` used to convert keys and values of Scala map
-   */
-  implicit def mapConverter[A, B, C, D](implicit keyConverter: JConverter[A, C],
-                                        valueConverter: JConverter[B, D]): JConverter[GenMap[A, B], JMap[C, D]] =
+    * @return converter for converting Scala [[scala.collection.Map]] to Java [[JMap]].
+    *         Given `converters` used to convert keys and values of Scala map
+    */
+  implicit def mapConverter[A, B, C, D](
+      implicit keyConverter: JConverter[A, C],
+      valueConverter: JConverter[B, D]
+  ): JConverter[GenMap[A, B], JMap[C, D]] =
     JConverter[GenMap[A, B], JMap[C, D]](_.deepAsJava[C, D])
 }

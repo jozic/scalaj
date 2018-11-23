@@ -100,8 +100,10 @@ package object immutable extends ImmutableSConverters {
       *            res2: Map[Long,scala.collection.immutable.Seq[Char]] = Map(3 -> Vector(a, b, c))
       *         }}}
       */
-    def deepAsScalaImmutable[C, D](implicit keyConverter: SConverter[A, C],
-                                   valueConverter: SConverter[B, D]): Map[C, D] =
+    def deepAsScalaImmutable[C, D](
+        implicit keyConverter: SConverter[A, C],
+        valueConverter: SConverter[B, D]
+    ): Map[C, D] =
       javaMap.deepAsScala[C, D].toMap[C, D]
   }
 

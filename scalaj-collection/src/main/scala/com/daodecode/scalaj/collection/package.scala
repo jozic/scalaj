@@ -12,7 +12,6 @@ import scala.reflect.ClassTag
 package object collection extends DecorateAsJava with DecorateAsScala with JavaAliases {
 
   /******************************************** deepAsJava converters ********************************************/
-
   implicit class DeepSeqAsJavaList[A](val scalaSeq: GenSeq[A]) extends AnyVal {
     private def toJava[T](genSeq: GenSeq[T]): JList[T] = genSeq match {
       case buffer: MBuffer[T] => buffer.asJava
@@ -134,14 +133,11 @@ package object collection extends DecorateAsJava with DecorateAsScala with JavaA
     def deepAsJava[C, D](implicit keyConverter: JConverter[A, C], valueConverter: JConverter[B, D]): JMap[C, D] =
       (keyConverter, valueConverter) match {
         case (_: JCastConverter[_, _], _: JCastConverter[_, _]) => toJava(scalaMap).asInstanceOf[JMap[C, D]]
-        case _ => toJava(scalaMap.map { case (k, v) =>
-          keyConverter.convert(k) -> valueConverter.convert(v)
-        })
+        case _ => toJava(scalaMap.map { case (k, v) => keyConverter.convert(k) -> valueConverter.convert(v) })
       }
   }
 
   /******************************************** deepAsScala converters ********************************************/
-
   implicit class DeepJavaListAsMutableBuffer[A](val javaList: JList[A]) extends AnyVal {
 
     /**
@@ -269,9 +265,7 @@ package object collection extends DecorateAsJava with DecorateAsScala with JavaA
     def deepAsScala[C, D](implicit keyConverter: SConverter[A, C], valueConverter: SConverter[B, D]): MMap[C, D] =
       (keyConverter, valueConverter) match {
         case (_: SCastConverter[_, _], _: SCastConverter[_, _]) => javaMap.asScala.asInstanceOf[MMap[C, D]]
-        case _ => javaMap.asScala.map { case (k, v) =>
-          keyConverter.convert(k) -> valueConverter.convert(v)
-        }
+        case _ => javaMap.asScala.map { case (k, v) => keyConverter.convert(k) -> valueConverter.convert(v) }
       }
   }
 

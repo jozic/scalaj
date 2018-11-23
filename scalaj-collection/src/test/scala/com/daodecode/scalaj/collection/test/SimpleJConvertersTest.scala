@@ -50,11 +50,11 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
       "acceptJListOf[JFloat](List(1F, 2F, 3F))" shouldNot compile
       "acceptJListOf[JFloat](List(1F, 2F, 3F).asJava)" shouldNot compile
-      acceptJListOf[JFloat](List(1F, 2F, 3F).deepAsJava)
+      acceptJListOf[JFloat](List(1f, 2f, 3f).deepAsJava)
 
       "acceptJListOf[JDouble](List(1D, 2D, 3D))" shouldNot compile
       "acceptJListOf[JDouble](List(1D, 2D, 3D).asJava)" shouldNot compile
-      acceptJListOf[JDouble](List(1D, 2D, 3D).deepAsJava)
+      acceptJListOf[JDouble](List(1d, 2d, 3d).deepAsJava)
 
       "acceptJListOf[JChar](List('a', 'b'))" shouldNot compile
       "acceptJListOf[JChar](List('a', 'b').asJava)" shouldNot compile
@@ -178,11 +178,11 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
       "acceptArrayOf[JFloat](Array[Float](1F, 2F, 3F))" shouldNot compile
       "acceptArrayOf[JFloat](Array[Float](1F, 2F, 3F).asJava)" shouldNot compile
-      acceptArrayOf[JFloat](Array[Float](1F, 2F, 3F).deepAsJava)
+      acceptArrayOf[JFloat](Array[Float](1f, 2f, 3f).deepAsJava)
 
       "acceptArrayOf[JDouble](Array[Double](1D, 2D, 3D))" shouldNot compile
       "acceptArrayOf[JDouble](Array[Double](1D, 2D, 3D).asJava)" shouldNot compile
-      acceptArrayOf[JDouble](Array[Double](1D, 2D, 3D).deepAsJava)
+      acceptArrayOf[JDouble](Array[Double](1d, 2d, 3d).deepAsJava)
 
       "acceptArrayOf[JChar](Array[Char]('a', 'b'))" shouldNot compile
       "acceptArrayOf[JChar](Array[Char]('a', 'b').asJava)" shouldNot compile
@@ -252,11 +252,11 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
       "acceptJSetOf[JFloat](Set(1F, 2F, 3F))" shouldNot compile
       "acceptJSetOf[JFloat](Set(1F, 2F, 3F).asJava)" shouldNot compile
-      acceptJSetOf[JFloat](Set(1F, 2F, 3F).deepAsJava)
+      acceptJSetOf[JFloat](Set(1f, 2f, 3f).deepAsJava)
 
       "acceptJSetOf[JDouble](Set(1D, 2D, 3D))" shouldNot compile
       "acceptJSetOf[JDouble](Set(1D, 2D, 3D).asJava)" shouldNot compile
-      acceptJSetOf[JDouble](Set(1D, 2D, 3D).deepAsJava)
+      acceptJSetOf[JDouble](Set(1d, 2d, 3d).deepAsJava)
 
       "acceptJSetOf[JChar](Set('a', 'b'))" shouldNot compile
       "acceptJSetOf[JChar](Set('a', 'b').asJava)" shouldNot compile
@@ -356,7 +356,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
       "acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D)" shouldNot compile
       "acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D).asJava" shouldNot compile
-      acceptJMapOf[JFloat, JDouble](Map[Float, Double](1F -> 2D).deepAsJava)
+      acceptJMapOf[JFloat, JDouble](Map[Float, Double](1f -> 2d).deepAsJava)
 
       "acceptJMapOf[JBoolean, JChar](Map[Boolean, Char](true -> 't')" shouldNot compile
       "acceptJMapOf[JBoolean, JChar](Map[Boolean, Char](true -> 't').asJava" shouldNot compile

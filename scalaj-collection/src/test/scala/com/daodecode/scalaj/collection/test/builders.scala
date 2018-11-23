@@ -7,7 +7,7 @@ import scala.reflect.ClassTag
 import com.daodecode.scalaj.collection._
 
 trait JListBuilder {
-  def listOf[A, JL <: JList[A] : ClassTag](as: A*): JL = {
+  def listOf[A, JL <: JList[A]: ClassTag](as: A*): JL = {
     val list = newInstance[JL]
     as.foreach(list.add)
     list
@@ -18,7 +18,7 @@ trait JListBuilder {
 }
 
 trait JSetBuilder {
-  def setOf[A, JS <: JSet[A] : ClassTag](as: A*): JS = {
+  def setOf[A, JS <: JSet[A]: ClassTag](as: A*): JS = {
     val set = newInstance[JS]
     as.foreach(set.add)
     set
@@ -28,9 +28,9 @@ trait JSetBuilder {
 }
 
 trait JMapBuilder {
-  def mapOf[A, B, JM <: JMap[A, B] : ClassTag](pairs: (A, B)*): JM = {
+  def mapOf[A, B, JM <: JMap[A, B]: ClassTag](pairs: (A, B)*): JM = {
     val jm = newInstance[JM]
-    pairs.foreach { case (k, v) => jm.put(k, v)}
+    pairs.foreach { case (k, v) => jm.put(k, v) }
     jm
   }
 

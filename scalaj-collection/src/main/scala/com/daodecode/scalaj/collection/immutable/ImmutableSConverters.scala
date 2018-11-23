@@ -28,7 +28,9 @@ trait ImmutableSConverters {
     * @return converter for converting Java [[JMap]] to immutable Scala [[scala.collection.immutable.Map]].
     *         Given `converters` used to convert keys and values of Java map
     */
-  implicit def jMapImmutableConverter[A, B, C, D](implicit keyConverter: SConverter[A, C],
-                                                  valueConverter: SConverter[B, D]): SConverter[JMap[A, B], Map[C, D]] =
+  implicit def jMapImmutableConverter[A, B, C, D](
+      implicit keyConverter: SConverter[A, C],
+      valueConverter: SConverter[B, D]
+  ): SConverter[JMap[A, B], Map[C, D]] =
     SConverter[JMap[A, B], Map[C, D]](_.deepAsScalaImmutable[C, D])
 }

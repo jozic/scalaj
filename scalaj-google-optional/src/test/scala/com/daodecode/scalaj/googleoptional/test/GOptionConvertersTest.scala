@@ -33,8 +33,8 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
 
       checkPresent(Option(1).deepAsJava, expected = 1: JInt)
       checkPresent(Option(1L).deepAsJava, expected = 1L: JLong)
-      checkPresent(Option(1F).deepAsJava, expected = 1F: JFloat)
-      checkPresent(Option(1D).deepAsJava, expected = 1D: JDouble)
+      checkPresent(Option(1f).deepAsJava, expected = 1f: JFloat)
+      checkPresent(Option(1d).deepAsJava, expected = 1d: JDouble)
       checkPresent(Option('a').deepAsJava, expected = 'a': JChar)
       checkPresent(Option(true).deepAsJava, expected = true: JBoolean)
 
@@ -65,25 +65,25 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
     }
 
     "convert nested options" in {
-      val asJava = Option(Option(2D)).deepAsJava
+      val asJava = Option(Option(2d)).deepAsJava
       asJava shouldBe a[GOption[_]]
       asJava.get shouldBe a[GOption[_]]
 
-      Option(Option(2D)).deepAsJava: GOption[GOption[JDouble]]
+      Option(Option(2d)).deepAsJava: GOption[GOption[JDouble]]
     }
 
     "convert collections in options" in {
-      val asJava = Option(Set(2D)).deepAsJava
+      val asJava = Option(Set(2d)).deepAsJava
       asJava shouldBe a[GOption[_]]
       asJava.get() shouldBe a[JSet[_]]
 
-      Option(Set(2D)).deepAsJava: GOption[JSet[JDouble]]
+      Option(Set(2d)).deepAsJava: GOption[JSet[JDouble]]
     }
 
     "convert options in collections" in {
       import com.daodecode.scalaj.collection._
 
-      val asJava = Set(Option(2D)).deepAsJava
+      val asJava = Set(Option(2d)).deepAsJava
       asJava shouldBe a[JSet[_]]
       asJava.iterator().next() shouldBe a[GOption[_]]
 
@@ -112,8 +112,8 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
       checkPresent(Option(ss(1)).asJava, expected = ss(1))
       checkPresent(Option(1).asJava, expected = 1)
       checkPresent(Option(1L).asJava, expected = 1L)
-      checkPresent(Option(1F).asJava, expected = 1F)
-      checkPresent(Option(1D).asJava, expected = 1D)
+      checkPresent(Option(1f).asJava, expected = 1f)
+      checkPresent(Option(1d).asJava, expected = 1d)
       checkPresent(Option('a').asJava, expected = 'a')
       checkPresent(Option(true).asJava, expected = true)
 
@@ -144,19 +144,19 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
     }
 
     "convert NOT nested options" in {
-      val asJava = Option(Option(2D)).asJava
+      val asJava = Option(Option(2d)).asJava
       asJava shouldBe a[GOption[_]]
       asJava.get shouldBe a[Option[_]]
 
-      Option(Option(2D)).asJava: GOption[Option[Double]]
+      Option(Option(2d)).asJava: GOption[Option[Double]]
     }
 
     "convert NOT collections in options" in {
-      val asJava = Option(Set(2D)).asJava
+      val asJava = Option(Set(2d)).asJava
       asJava shouldBe a[GOption[_]]
       asJava.get() shouldBe a[Set[_]]
 
-      Option(Set(2D)).asJava: GOption[Set[Double]]
+      Option(Set(2d)).asJava: GOption[Set[Double]]
     }
   }
 
@@ -174,8 +174,8 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
       checkSome[Short](GOption.of(js(1)).deepAsScala, expected = 1: Short)
       checkSome[Int](GOption.of(1: JInt).deepAsScala, expected = 1)
       checkSome[Long](GOption.of(1L: JLong).deepAsScala, expected = 1L)
-      checkSome[Float](GOption.of(1F: JFloat).deepAsScala, expected = 1F)
-      checkSome[Double](GOption.of(1D: JDouble).deepAsScala, expected = 1D)
+      checkSome[Float](GOption.of(1f: JFloat).deepAsScala, expected = 1f)
+      checkSome[Double](GOption.of(1d: JDouble).deepAsScala, expected = 1d)
       checkSome[Char](GOption.of('a': JChar).deepAsScala, expected = 'a')
       checkSome[Boolean](GOption.of(false: JBoolean).deepAsScala, expected = false)
 
@@ -202,31 +202,31 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
     }
 
     "convert nested options" in {
-      val asScala = GOption.of(GOption.of[JDouble](2D)).deepAsScala
+      val asScala = GOption.of(GOption.of[JDouble](2d)).deepAsScala
 
       asScala shouldBe an[Option[_]]
       asScala.get shouldBe an[Option[_]]
 
-      GOption.of(GOption.of[JDouble](2D)).deepAsScala: Option[Option[Double]]
+      GOption.of(GOption.of[JDouble](2d)).deepAsScala: Option[Option[Double]]
     }
 
     "convert collections in options" in {
       //requires type ascription
-      val asScala = GOption.of(JSet[JDouble](2D)).deepAsScala
+      val asScala = GOption.of(JSet[JDouble](2d)).deepAsScala
       asScala shouldBe an[Option[_]]
       asScala.get shouldBe an[MSet[_]]
 
-      GOption.of(JSet[JDouble](2D)).deepAsScala: Option[MSet[Double]]
+      GOption.of(JSet[JDouble](2d)).deepAsScala: Option[MSet[Double]]
     }
 
     "convert options in collections" in {
       import com.daodecode.scalaj.collection._
 
-      val asScala = JSet(GOption.of[JDouble](2D)).deepAsScala
+      val asScala = JSet(GOption.of[JDouble](2d)).deepAsScala
       asScala shouldBe an[MSet[_]]
       asScala.head shouldBe an[Option[_]]
 
-      JSet(GOption.of[JDouble](2D)).deepAsScala: MSet[Option[Double]]
+      JSet(GOption.of[JDouble](2d)).deepAsScala: MSet[Option[Double]]
 
       val asScala2 = GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a')))).deepAsScala
       asScala2 shouldBe an[Option[_]]
@@ -235,7 +235,8 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
       asScala2.get.head._2 shouldBe an[MSet[_]]
       asScala2.get.head._2.head shouldBe an[Option[_]]
 
-      GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a'))))
+      GOption
+        .of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a'))))
         .deepAsScala: Option[MMap[Option[Long], MSet[Option[Char]]]]
     }
   }
@@ -244,21 +245,21 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
     "convert nested collections as immutable if asked" in {
       import com.daodecode.scalaj.collection.immutable._
 
-      val asScala = GOption.of(JSet[JDouble](2D)).deepAsScala
+      val asScala = GOption.of(JSet[JDouble](2d)).deepAsScala
       asScala shouldBe an[Option[_]]
       asScala.get shouldBe an[Set[_]]
 
-      GOption.of(JSet[JDouble](2D)).deepAsScala: Option[Set[Double]]
+      GOption.of(JSet[JDouble](2d)).deepAsScala: Option[Set[Double]]
     }
 
     "convert collections in options in collections as immutable if asked" in {
       import com.daodecode.scalaj.collection.immutable._
 
-      val asScala = JSet(GOption.of[JDouble](2D)).deepAsScalaImmutable
+      val asScala = JSet(GOption.of[JDouble](2d)).deepAsScalaImmutable
       asScala shouldBe an[Set[_]]
       asScala.head shouldBe an[Option[_]]
 
-      JSet(GOption.of[JDouble](2D)).deepAsScalaImmutable: Set[Option[Double]]
+      JSet(GOption.of[JDouble](2d)).deepAsScalaImmutable: Set[Option[Double]]
 
       val asScala2 = GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a')))).deepAsScala
       asScala2 shouldBe an[Option[_]]
@@ -267,7 +268,8 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
       asScala2.get.head._2 shouldBe an[Set[_]]
       asScala2.get.head._2.head shouldBe an[Option[_]]
 
-      GOption.of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a'))))
+      GOption
+        .of(JMap(GOption.of[JLong](2L) -> JSet(GOption.of[JChar]('a'))))
         .deepAsScala: Option[Map[Option[Long], Set[Option[Char]]]]
     }
 
@@ -287,8 +289,8 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
       checkSome[JShort](GOption.of(js(1)).asScala, expected = js(1))
       checkSome[JInt](GOption.of(1: JInt).asScala, expected = 1: JInt)
       checkSome[JLong](GOption.of(1L: JLong).asScala, expected = 1L: JLong)
-      checkSome[JFloat](GOption.of(1F: JFloat).asScala, expected = 1F: JFloat)
-      checkSome[JDouble](GOption.of(1D: JDouble).asScala, expected = 1D: JDouble)
+      checkSome[JFloat](GOption.of(1f: JFloat).asScala, expected = 1f: JFloat)
+      checkSome[JDouble](GOption.of(1d: JDouble).asScala, expected = 1d: JDouble)
       checkSome[JChar](GOption.of('a': JChar).asScala, expected = 'a': JChar)
       checkSome[JBoolean](GOption.of(false: JBoolean).asScala, expected = false: JBoolean)
 
@@ -315,20 +317,20 @@ class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with
     }
 
     "convert NOT nested options" in {
-      val asScala = GOption.of(GOption.of[JDouble](2D)).asScala
+      val asScala = GOption.of(GOption.of[JDouble](2d)).asScala
 
       asScala shouldBe an[Option[_]]
       asScala.get shouldBe an[GOption[_]]
 
-      GOption.of(GOption.of[JDouble](2D)).asScala: Option[GOption[JDouble]]
+      GOption.of(GOption.of[JDouble](2d)).asScala: Option[GOption[JDouble]]
     }
 
     "convert NOT collections in options" in {
-      val asScala = GOption.of(JSet[JDouble](2D)).asScala
+      val asScala = GOption.of(JSet[JDouble](2d)).asScala
       asScala shouldBe an[Option[_]]
       asScala.get shouldBe an[JSet[_]]
 
-      GOption.of(JSet[JDouble](2D)).asScala: Option[JSet[JDouble]]
+      GOption.of(JSet[JDouble](2d)).asScala: Option[JSet[JDouble]]
     }
 
   }
