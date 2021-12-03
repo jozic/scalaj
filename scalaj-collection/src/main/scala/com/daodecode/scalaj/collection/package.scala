@@ -1,15 +1,14 @@
 package com.daodecode.scalaj
 
-import scala.collection.convert.{DecorateAsJava, DecorateAsScala}
 import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Seq => MSeq, Set => MSet}
-import scala.collection.{Seq => GenSeq, Set => GenSet, Map => GenMap}
+import scala.collection.{Map => GenMap, Seq => GenSeq, Set => GenSet}
 import scala.reflect.ClassTag
 
 /**
   * Importing `com.daodecode.scalaj.collection._` allows to use "extension" methods deepAsScala/deepAsJava,
   * which convert all supported nested Java/Scala collections as well as primitives.
   */
-package object collection extends DecorateAsJava with DecorateAsScala with JavaAliases {
+package object collection extends StdLibDecorators with JavaAliases {
 
   /******************************************** deepAsJava converters ********************************************/
   implicit class DeepSeqAsJavaList[A](val scalaSeq: GenSeq[A]) extends AnyVal {
