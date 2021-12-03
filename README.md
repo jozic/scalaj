@@ -1,4 +1,4 @@
-ScalaJ Converters [![Build Status](https://travis-ci.org/jozic/scalaj.svg?branch=master)](https://travis-ci.org/jozic/scalaj) [![Coverage Status](https://coveralls.io/repos/jozic/scalaj/badge.svg)](https://coveralls.io/r/jozic/scalaj)
+ScalaJ Converters [![Build Status](https://github.com/jozic/scalaj/actions/workflows/checks.yml/badge.svg?branch=main)](https://github.com/jozic/scalaj/actions/workflows/checks.yml) [![Coverage Status](https://coveralls.io/repos/jozic/scalaj/badge.svg)](https://coveralls.io/r/jozic/scalaj)
 =================
 
 ### When JavaConverters is not enough...
