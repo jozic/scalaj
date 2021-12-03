@@ -10,6 +10,6 @@ package object test {
 
   def ji(i: Int): JInt = i
 
-  def newInstance[A: ClassTag] =
-    implicitly[ClassTag[A]].runtimeClass.newInstance().asInstanceOf[A]
+  def newInstance[A: ClassTag]: A =
+    implicitly[ClassTag[A]].runtimeClass.getDeclaredConstructor().newInstance().asInstanceOf[A]
 }
