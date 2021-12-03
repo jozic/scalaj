@@ -1,0 +1,32 @@
+name: build
+
+on:
+  pull_request:
+    branches: ['**']
+  push:
+    branches: ['**']
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        java:
+          - graalvm-ce-java11@21
+          - zulu@1.8
+        os:
+          - ubuntu-latest
+      fail-fast: false
+    steps:
+      - name: Checkout current branch (full)
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - uses: coursier/cache-action@v6.3
+      - uses: olafurpg/setup-scala@v13
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Compile, test and check format, coverage
+        run: "sbt -batch clean checkFormatting +test scoverage"
+        shell: bash

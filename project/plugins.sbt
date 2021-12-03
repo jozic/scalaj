@@ -8,6 +8,4 @@ addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.10")
 
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.1.2")
 
-addSbtPlugin("com.thoughtworks.sbt-api-mappings" % "sbt-api-mappings" % "2.0.0")
-
 addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.6.0-RC4")
