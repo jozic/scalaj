@@ -2,6 +2,19 @@ import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 import scoverage._
 import xerial.sbt.Sonatype._
 
+def scala213 = Def.setting(scalaVersion.value.startsWith("2.13"))
+lazy val crossVersionSourcesSettings =
+  Seq(Compile, Test).map { sc =>
+    (sc / unmanagedSourceDirectories) ++= {
+      (sc / unmanagedSourceDirectories).value.flatMap { dir =>
+        if (dir.getPath.endsWith("scala"))
+          Seq(new File(dir.getPath + (if (scala213.value) "_2.13+" else "_2.13-")))
+        else
+          Seq.empty
+      }
+    }
+  }
+
 val coverageSettings = Seq(
   CoverallsKeys.coverallsTokenFile := Some("./token.txt"),
   ScoverageKeys.coverageMinimumStmtTotal := 95,
@@ -45,27 +58,44 @@ val publishSettings = sonatypeSettings ++ Seq(
 
 val commonSettings = Seq(
   organization := "com.daodecode",
-  scalaVersion := "2.11.12",
-  crossScalaVersions := Seq(scalaVersion.value, "2.12.15"),
+  scalaVersion := "2.13.7",
+  crossScalaVersions := Seq(scalaVersion.value, "2.11.12", "2.12.15"),
   scalafmtConfig := Some(scalaj.base / "scalafmt-config/.scalafmt.conf")
-) ++ releaseSettings
+) ++ releaseSettings ++ crossVersionSourcesSettings
 
 val moduleSettings = commonSettings ++ Seq(
-  scalacOptions := Seq(
-    "-Xlint",
-    "-unchecked",
-    "-deprecation",
-    "-Xfatal-warnings",
-    "-Ywarn-inaccessible",
-    "-Ywarn-dead-code",
-    "-Ywarn-adapted-args",
-    "-Ywarn-nullary-unit",
-    "-feature",
-    "-Ywarn-unused",
-    "-Ywarn-unused-import",
-    "-encoding", "UTF-8"
-  ),
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.9" % "test"
+  scalacOptions :=
+    (if (scala213.value)
+       Seq(
+         "-Xlint",
+         "-unchecked",
+         "-deprecation",
+         "-Xfatal-warnings",
+         "-Ywarn-dead-code",
+         "-feature",
+         "-Ywarn-unused",
+         "-encoding",
+         "UTF-8"
+       )
+     else
+       Seq(
+         "-Xlint",
+         "-unchecked",
+         "-deprecation",
+         "-Xfatal-warnings",
+         "-Ywarn-inaccessible",
+         "-Ywarn-dead-code",
+         "-Ywarn-adapted-args",
+         "-Ywarn-nullary-unit",
+         "-feature",
+         "-Ywarn-unused",
+         "-Ywarn-unused-import",
+         "-encoding",
+         "UTF-8"
+       )),
+  libraryDependencies ++= Seq(
+    "org.scalatest" %% "scalatest" % "3.0.9" % "test"
+  )
 ) ++ publishSettings ++ coverageSettings
 
 lazy val scalaj: Project =
@@ -78,7 +108,13 @@ lazy val scalaj: Project =
       commonSettings
     )
 
-lazy val `scalaj-collection` = project.settings(moduleSettings)
+lazy val `scalaj-collection` = project.settings(
+  moduleSettings ++ Seq(
+    libraryDependencies ++= Seq(
+      "org.scala-lang.modules" %% "scala-collection-compat" % "2.6.0"
+    )
+  )
+)
 
 lazy val `scalaj-google-optional` =
   project.settings(moduleSettings).dependsOn(`scalaj-collection` % "compile->compile;test->test")

@@ -1,5 +1,6 @@
 package com.daodecode.scalaj.collection
 
+import scala.collection.compat._
 import scala.collection.immutable.{Seq => ImSeq}
 
 /**
@@ -38,7 +39,7 @@ package object immutable extends ImmutableSConverters {
       *         }}}
       */
     def deepAsScalaImmutable[B](implicit converter: SConverter[A, B]): ImSeq[B] =
-      javaList.deepAsScala[B].to[ImSeq]
+      javaList.deepAsScala[B].to(ImSeq)
   }
 
   implicit class DeepJavaSetAsImmutableSet[A](val javaSet: JSet[A]) extends AnyVal {
@@ -70,7 +71,7 @@ package object immutable extends ImmutableSConverters {
       *         }}}
       */
     def deepAsScalaImmutable[B](implicit converter: SConverter[A, B]): Set[B] =
-      javaSet.deepAsScala[B].to[Set]
+      javaSet.deepAsScala[B].toSet
   }
 
   implicit class DeepJavaMapAsImmutableMap[A, B](val javaMap: JMap[A, B]) extends AnyVal {

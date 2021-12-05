@@ -1,33 +1,38 @@
 package com.daodecode.scalaj.collection.test
 
+import scala.collection.{immutable, _}
+
 import com.daodecode.scalaj.collection._
 import org.scalatest.{Matchers, WordSpec}
-
-import scala.collection.generic.CanBuildFrom
-import scala.collection.{immutable, mutable}
 
 class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "SeqConverters" should {
 
-    def acceptJListOf[A](jl: JList[A]) = jl
+    def acceptJListOf[A](jl: JList[A]): JList[A] = jl
 
-    def checkMutableSeq[MS <: mutable.Seq[Int]](implicit cbf: CanBuildFrom[MS, Int, MS]): Unit = {
-      val mSeq = (cbf() += 2).result()
+    def checkMutableSeq[MS[A] <: mutable.Seq[A]](msf: SeqFactory[MS]): Unit = {
+      val mSeq = msf.empty[Int] :+ 2
       mSeq should be(Seq(2))
       mSeq.deepAsJava[Int].set(0, 5)
       mSeq should be(Seq(5))
     }
 
-    def checkMutableBuffer[MB <: mutable.Buffer[Int]](implicit cbf: CanBuildFrom[MB, Int, MB]): Unit = {
-      val mBuf = (cbf() += 2).result()
+    def checkClassTagMutableSeq[MS[A] <: mutable.Seq[A]](msf: ClassTagSeqFactory[MS]): Unit = {
+      val mSeq = msf.empty[Int] :+ 2
+      mSeq should be(Seq(2))
+      mSeq.deepAsJava[Int].set(0, 5)
+      mSeq should be(Seq(5))
+    }
+
+    def checkMutableBuffer[MB[A] <: mutable.Buffer[A]](mbf: SeqFactory[MB]): Unit = {
+      val mBuf = mbf.empty[Int] += 2
       mBuf should be(mutable.Buffer(2))
       val jlist = mBuf.deepAsJava[Int]
       jlist.set(0, 5)
       mBuf should be(mutable.Buffer(5))
       jlist.add(10)
       mBuf should be(mutable.Buffer(5, 10))
-
     }
 
     "convert lists of primitives properly" in {
@@ -72,7 +77,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     "allow custom converters" in {
-      implicit val intToString = JConverter[Int, String](_ + 1.toString)
+      implicit val intToString = JConverter[Int, String](i => s"${i}1")
       val asJava: JList[String] = List(1, 2, 3).deepAsJava
       asJava.get(0) should be("11")
       asJava.get(1) should be("21")
@@ -83,7 +88,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
       acceptJListOf(List.empty[Int].deepAsJava)
       acceptJListOf(List(1).deepAsJava)
       acceptJListOf(Vector(1).deepAsJava)
-      acceptJListOf(Stream(1).deepAsJava)
+      acceptJListOf(LazyList(1).deepAsJava)
       acceptJListOf(Seq(1).deepAsJava)
       acceptJListOf(immutable.Seq(1).deepAsJava)
       acceptJListOf(immutable.IndexedSeq(1).deepAsJava)
@@ -92,7 +97,6 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
       acceptJListOf(mutable.Seq(1).deepAsJava)
       acceptJListOf(mutable.IndexedSeq(1).deepAsJava)
-      acceptJListOf(mutable.LinearSeq(1).deepAsJava)
 
       acceptJListOf(mutable.Buffer(1).deepAsJava)
       acceptJListOf(mutable.ArrayBuffer(1).deepAsJava)
@@ -100,34 +104,29 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
       acceptJListOf(mutable.UnrolledBuffer(1).deepAsJava)
 
       acceptJListOf(mutable.Queue(1).deepAsJava)
-      acceptJListOf(mutable.ArrayStack(1).deepAsJava)
       acceptJListOf(mutable.ArraySeq(1).deepAsJava)
-      acceptJListOf(mutable.MutableList(1).deepAsJava)
-      acceptJListOf(mutable.ResizableArray(1).deepAsJava)
     }
 
     "keep mutable seqs mutable" in {
-      checkMutableSeq[mutable.Seq[Int]]
-      checkMutableSeq[mutable.ArraySeq[Int]]
-      checkMutableSeq[mutable.LinearSeq[Int]]
-      checkMutableSeq[mutable.IndexedSeq[Int]]
-      checkMutableSeq[mutable.MutableList[Int]]
-      checkMutableSeq[mutable.ResizableArray[Int]]
+      checkMutableSeq(mutable.Seq)
+      checkMutableSeq(mutable.IndexedSeq)
 
-      checkMutableSeq[mutable.Queue[Int]]
-      checkMutableSeq[mutable.ArrayStack[Int]]
+      checkMutableSeq(mutable.Queue)
 
-      checkMutableSeq[mutable.Buffer[Int]]
-      checkMutableSeq[mutable.ArrayBuffer[Int]]
-      checkMutableSeq[mutable.ListBuffer[Int]]
-      checkMutableSeq[mutable.UnrolledBuffer[Int]]
+      checkMutableSeq(mutable.Buffer)
+      checkMutableSeq(mutable.ArrayBuffer)
+      checkMutableSeq(mutable.ListBuffer)
+
+      checkClassTagMutableSeq(mutable.ArraySeq)
+      checkClassTagMutableSeq(mutable.UnrolledBuffer)
     }
 
     "keep mutable buffers mutable" in {
-      checkMutableBuffer[mutable.Buffer[Int]]
-      checkMutableBuffer[mutable.ArrayBuffer[Int]]
-      checkMutableBuffer[mutable.ListBuffer[Int]]
-      checkMutableBuffer[mutable.UnrolledBuffer[Int]]
+      checkMutableBuffer(mutable.Buffer)
+      checkMutableBuffer(mutable.ArrayBuffer)
+      checkMutableBuffer(mutable.ListBuffer)
+      checkMutableBuffer(mutable.Queue)
+      checkMutableBuffer(mutable.ArrayDeque)
     }
 
     "return same scala buffer with primitives and self conversions" in {
@@ -200,7 +199,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     "allow custom converters" in {
-      implicit val intToString = JConverter[Int, String](_ + 1.toString)
+      implicit val intToString = JConverter[Int, String](i => s"${i}1")
       val asJava: Array[String] = Array(1, 2, 3).deepAsJava
       asJava(0) should be("11")
       asJava(1) should be("21")
@@ -223,10 +222,17 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "SetConverters" should {
 
-    def acceptJSetOf[A](js: JSet[A]) = js
+    def acceptJSetOf[A](js: JSet[A]): JSet[A] = js
 
-    def checkMutableSet[MS <: mutable.Set[Int]](implicit cbf: CanBuildFrom[MS, Int, MS]): Unit = {
-      val mSet = (cbf() += 2).result()
+    def checkMutableSet[MS[A] <: mutable.Set[A]](implicit f: IterableFactory[MS]): Unit = {
+      val mSet = (f.empty[Int] += 2).result()
+      mSet should be(Set(2))
+      mSet.deepAsJava[Int].add(5)
+      mSet should be(Set(2, 5))
+    }
+
+    def checkMutableSortedSet[MS[A] <: mutable.Set[A]](implicit f: SortedIterableFactory[MS]): Unit = {
+      val mSet = (f.empty[Int] += 2).result()
       mSet should be(Set(2))
       mSet.deepAsJava[Int].add(5)
       mSet should be(Set(2, 5))
@@ -274,7 +280,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     "allow custom converters" in {
-      implicit val intToString = JConverter[Int, String](_ + 1.toString)
+      implicit val intToString = JConverter[Int, String](i => s"${i}1")
       val asJava: JSet[String] = Set(1, 2, 3).deepAsJava
 
       asJava should contain("11")
@@ -298,11 +304,16 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     "keep mutable sets mutable" in {
-      checkMutableSet[mutable.Set[Int]]
-      checkMutableSet[mutable.HashSet[Int]]
-      checkMutableSet[mutable.BitSet]
-      checkMutableSet[mutable.SortedSet[Int]]
-      checkMutableSet[mutable.TreeSet[Int]]
+      checkMutableSet(mutable.Set)
+      checkMutableSet(mutable.HashSet)
+      checkMutableSortedSet(mutable.SortedSet)
+      checkMutableSortedSet(mutable.TreeSet)
+
+      // check BitSet
+      val mSet = (mutable.BitSet.empty += 2).result()
+      mSet should be(Set(2))
+      mSet.deepAsJava[Int].add(5)
+      mSet should be(Set(2, 5))
     }
 
     "return same mutable scala set with primitives and self conversions" in {
@@ -336,10 +347,10 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
   "MapConverters" should {
 
-    def acceptJMapOf[A, B](jm: JMap[A, B]) = jm
+    def acceptJMapOf[A, B](jm: JMap[A, B]): JMap[A, B] = jm
 
-    def checkMutableMap[MM <: mutable.Map[Int, String]](implicit cbf: CanBuildFrom[MM, (Int, String), MM]): Unit = {
-      val mMap = (cbf() += 2 -> "two").result()
+    def checkMutableMap[MM[A, B] <: mutable.Map[A, B]](implicit mf: MapFactory[MM]): Unit = {
+      val mMap = (mf.empty[Int, String] += 2 -> "two").result()
       mMap should be(Map(2 -> "two"))
       mMap.deepAsJava.put(5, "five")
       mMap should be(Map(2 -> "two", 5 -> "five"))
@@ -370,7 +381,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
     }
 
     "allow custom converters" in {
-      implicit val intToString = JConverter[Int, String](_ + 1.toString)
+      implicit val intToString = JConverter[Int, String](i => s"${i}1")
       val asJava: JMap[String, String] = Map("one" -> 1, "two" -> 2, "three" -> 3).deepAsJava
 
       asJava.get("one") should be("11")
@@ -389,23 +400,15 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
 
       acceptJMapOf(mutable.Map(1 -> "one").deepAsJava)
       acceptJMapOf(mutable.HashMap(1 -> "one").deepAsJava)
-      acceptJMapOf(mutable.ListMap(1L -> "one").deepAsJava)
       acceptJMapOf(mutable.LinkedHashMap(1L -> "one").deepAsJava)
-      acceptJMapOf(mutable.OpenHashMap(1L -> "one").deepAsJava)
       acceptJMapOf(mutable.WeakHashMap(1L -> "one").deepAsJava)
     }
 
     "keep mutable maps mutable" in {
-      checkMutableMap[mutable.Map[Int, String]]
-      checkMutableMap[mutable.HashMap[Int, String]]
-      checkMutableMap[mutable.ListMap[Int, String]]
-      checkMutableMap[mutable.LinkedHashMap[Int, String]]
-      checkMutableMap[mutable.WeakHashMap[Int, String]]
-
-      //OpenHashMap doesn't provide CanBuildFrom
-      val openHashMap: mutable.OpenHashMap[Int, String] = mutable.OpenHashMap(1 -> "one")
-      openHashMap.deepAsJava.put(2, "two")
-      openHashMap should be(mutable.OpenHashMap(1 -> "one", 2 -> "two"))
+      checkMutableMap(mutable.Map)
+      checkMutableMap(mutable.HashMap)
+      checkMutableMap(mutable.LinkedHashMap)
+      checkMutableMap(mutable.WeakHashMap)
     }
 
     "return same mutable scala map with primitives and self conversions" in {
@@ -418,15 +421,7 @@ class SimpleJConvertersTest extends WordSpec with Matchers {
         scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
       }
       {
-        val scalaMap = mutable.ListMap(1 -> "one")
-        scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
-      }
-      {
         val scalaMap = mutable.LinkedHashMap(1 -> "one")
-        scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
-      }
-      {
-        val scalaMap = mutable.OpenHashMap(1 -> "one")
         scalaMap.deepAsJava.asScala should be theSameInstanceAs scalaMap
       }
       {
