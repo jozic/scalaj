@@ -10,7 +10,7 @@ JavaConverters is your friend here, but it's not always good enough.
 If you are tired of doing something like this
 
 ```scala
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 def iTakeInt(i: Int) = { ... }
 
@@ -20,7 +20,7 @@ val something = someJavaListOfJavaIntegers.asScala.map(iTakeInt(_))
 or this
 
 ```scala
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 val something: mutable.Map[java.lang.Long, Buffer] = 
   someJavaMapOfJavaLongsToJavaLists.asScala.mapValues(_.asScala)
@@ -79,13 +79,13 @@ val immutableScalaBoo: Set[Option[immutable.Seq[Double]]] = boo.deepAsScalaImmut
 
 ## scalaj-collection
 
-| 2.10 | 2.11 | 2.12 |
-|------|------|------|
-|[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.10) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.11) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.12) |
+| 2.10 | 2.11 | 2.12 | 2.13                                                                                                                                                                                                       |
+|------|------|------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.10) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.11) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.12) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.13) |
 
 ### sbt
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.2.0"
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.3.1"
 ```
 ### maven
 
@@ -93,7 +93,7 @@ set `<scala.binary.version>` property to scala version you need, like
 
 ```xml
 <properties>
-    <scala.binary.version>2.12</scala.binary.version>
+    <scala.binary.version>2.13</scala.binary.version>
 </properties>
 ```
 
@@ -103,26 +103,26 @@ set `<scala.binary.version>` property to scala version you need, like
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_${scala.binary.version}</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.1</version>
 </dependency>
 ```
 
 ## scalaj-googleoptional
 
-| 2.10 | 2.11 | 2.12 |
-|------|------|------|
-|[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.10) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.11) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.12) |
+| 2.10 | 2.11 | 2.12 | 2.13                                                                                                                                                                                                                |
+|------|------|------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.10) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.11) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.12) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.13) |
 
 ### sbt
 
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.2.0"
+libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.3.1"
 ```
 ### maven
 
 ```xml
 <properties>
-    <scala.binary.version>2.12</scala.binary.version>
+    <scala.binary.version>2.13</scala.binary.version>
 </properties>
 ```
 
@@ -132,7 +132,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.2.0"
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_${scala.binary.version}</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.1</version>
 </dependency>
 ```
 
@@ -164,14 +164,14 @@ then add snapshot as a dependency
 ### sbt
 
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.2.1-SNAPSHOT"
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.3.2-SNAPSHOT"
 ```
 
 ### maven
 
 ```xml
 <properties>
-    <scala.binary.version>2.12</scala.binary.version>
+    <scala.binary.version>2.13</scala.binary.version>
 </properties>
 ```
 
@@ -181,7 +181,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.2.1-SNAPSHOT"
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_${scala.binary.version}</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.3.2-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -190,13 +190,13 @@ libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.2.1-SNAPSHOT"
 ### sbt
 
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.2.1-SNAPSHOT"
+libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.3.2-SNAPSHOT"
 ```
 ### maven
 
 ```xml
 <properties>
-    <scala.binary.version>2.12</scala.binary.version>
+    <scala.binary.version>2.13</scala.binary.version>
 </properties>
 ```
 
@@ -206,7 +206,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.2.1-SNAPS
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_${scala.binary.version}</artifactId>
-    <version>0.2.1-SNAPSHOT</version>
+    <version>0.3.2-SNAPSHOT</version>
 </dependency>
 ```
 
