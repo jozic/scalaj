@@ -4,11 +4,10 @@ import com.daodecode.scalaj.JavaAliases._
 import com.daodecode.scalaj.collection.test.{JMapBuilder, JSetBuilder}
 import com.daodecode.scalaj.googleoptional._
 import com.google.common.base.{Optional => GOption}
-import org.scalatest.{Matchers, WordSpec}
 
 import scala.collection.mutable.{Map => MMap, Set => MSet}
 
-class GOptionConvertersTest extends WordSpec with Matchers with JSetBuilder with JMapBuilder {
+class GOptionConvertersTest extends ScalaJSpec with JSetBuilder with JMapBuilder {
 
   def jb(b: Byte): JByte = b
 

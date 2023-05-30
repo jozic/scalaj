@@ -1,12 +1,11 @@
 package com.daodecode.scalaj.collection.test
 
+import com.daodecode.scalaj.collection._
+
 import scala.collection.immutable.{Seq => ImSeq}
 import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Set => MSet}
 
-import com.daodecode.scalaj.collection._
-import org.scalatest.{Matchers, WordSpec}
-
-class ComplexSConvertersTest extends WordSpec with Matchers with JListBuilder with JSetBuilder with JMapBuilder {
+class ComplexSConvertersTest extends ScalaJSpec with JListBuilder with JSetBuilder with JMapBuilder {
 
   "AsScala collection converters" should {
 

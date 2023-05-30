@@ -23,8 +23,8 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
-      - uses: coursier/cache-action@v6.3
-      - uses: olafurpg/setup-scala@v13
+      - uses: coursier/cache-action@v6
+      - uses: coursier/setup-action@v1
         with:
           java-version: ${{ matrix.java }}
       - name: Compile, test and check format, coverage

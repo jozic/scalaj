@@ -1,11 +1,10 @@
 package com.daodecode.scalaj.collection.test
 
+import com.daodecode.scalaj.collection._
+
 import scala.collection.{immutable, _}
 
-import com.daodecode.scalaj.collection._
-import org.scalatest.{Matchers, WordSpec}
-
-class SimpleJConvertersTest extends WordSpec with Matchers {
+class SimpleJConvertersTest extends ScalaJSpec {
 
   "SeqConverters" should {
 
