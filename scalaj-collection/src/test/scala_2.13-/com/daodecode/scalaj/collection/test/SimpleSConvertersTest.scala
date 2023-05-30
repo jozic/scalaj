@@ -8,9 +8,8 @@ import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Set => MSet}
 import scala.reflect.ClassTag
 
 import com.daodecode.scalaj.collection._
-import org.scalatest.{Matchers, WordSpec}
 
-class SimpleSConvertersTest extends WordSpec with Matchers with JListBuilder with JSetBuilder with JMapBuilder {
+class SimpleSConvertersTest extends ScalaJSpec with JListBuilder with JSetBuilder with JMapBuilder {
 
   "JListConverters" should {
 

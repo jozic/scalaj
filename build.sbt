@@ -17,7 +17,7 @@ lazy val crossVersionSourcesSettings =
 
 val coverageSettings = Seq(
   CoverallsKeys.coverallsTokenFile := Some("./token.txt"),
-  ScoverageKeys.coverageMinimumStmtTotal := 95,
+  ScoverageKeys.coverageMinimumStmtTotal := 100,
   ScoverageKeys.coverageFailOnMinimum := true,
   ScoverageKeys.coverageHighlighting := true
 )
@@ -53,8 +53,8 @@ val publishSettings = sonatypeSettings ++ Seq(
 
 val commonSettings = Seq(
   organization := "com.daodecode",
-  scalaVersion := "2.13.7",
-  crossScalaVersions := Seq(scalaVersion.value, "2.11.12", "2.12.15"),
+  scalaVersion := "2.13.10",
+  crossScalaVersions := Seq(scalaVersion.value, "2.11.12", "2.12.17"),
   scalafmtConfig := Some(scalaj.base / "scalafmt-config/.scalafmt.conf")
 ) ++ releaseSettings ++ crossVersionSourcesSettings
 
@@ -70,7 +70,8 @@ val moduleSettings = commonSettings ++ Seq(
          "-feature",
          "-Ywarn-unused",
          "-encoding",
-         "UTF-8"
+         "UTF-8",
+         "-Wconf:origin=scala.collection.compat.*:s"
        )
      else
        Seq(
@@ -89,7 +90,7 @@ val moduleSettings = commonSettings ++ Seq(
          "UTF-8"
        )),
   libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % "3.0.9" % "test"
+    "org.scalatest" %% "scalatest" % "3.2.16" % "test"
   )
 ) ++ publishSettings ++ coverageSettings
 
@@ -106,7 +107,7 @@ lazy val scalaj: Project =
 lazy val `scalaj-collection` = project.settings(
   moduleSettings ++ Seq(
     libraryDependencies ++= Seq(
-      "org.scala-lang.modules" %% "scala-collection-compat" % "2.6.0"
+      "org.scala-lang.modules" %% "scala-collection-compat" % "2.10.0"
     )
   )
 )

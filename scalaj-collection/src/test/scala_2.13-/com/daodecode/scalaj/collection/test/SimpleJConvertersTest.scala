@@ -4,9 +4,8 @@ import scala.collection.generic.CanBuildFrom
 import scala.collection.{immutable, mutable}
 
 import com.daodecode.scalaj.collection._
-import org.scalatest.{Matchers, WordSpec}
 
-class SimpleJConvertersTest extends WordSpec with Matchers {
+class SimpleJConvertersTest extends ScalaJSpec {
 
   "SeqConverters" should {
 
