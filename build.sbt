@@ -3,12 +3,14 @@ import scoverage._
 import xerial.sbt.Sonatype._
 
 def scala213 = Def.setting(scalaVersion.value.startsWith("2.13"))
+def scala3 = Def.setting(scalaVersion.value.startsWith("3."))
+
 lazy val crossVersionSourcesSettings =
   Seq(Compile, Test).map { sc =>
     (sc / unmanagedSourceDirectories) ++= {
       (sc / unmanagedSourceDirectories).value.flatMap { dir =>
         if (dir.getPath.endsWith("scala"))
-          Seq(new File(dir.getPath + (if (scala213.value) "_2.13+" else "_2.13-")))
+          Seq(new File(dir.getPath + (if (scala213.value || scala3.value) "_2.13+" else "_2.13-")))
         else
           Seq.empty
       }
@@ -54,41 +56,51 @@ val publishSettings = sonatypeSettings ++ Seq(
 val commonSettings = Seq(
   organization := "com.daodecode",
   scalaVersion := "2.13.11",
-  crossScalaVersions := Seq(scalaVersion.value, "2.12.18"),
+  crossScalaVersions := Seq(scalaVersion.value, "2.12.18", "3.3.0"),
   scalafmtConfig := Some(scalaj.base / "scalafmt-config/.scalafmt.conf")
 ) ++ releaseSettings ++ crossVersionSourcesSettings
 
+val Scala212ScalacOptions = Seq(
+  "-Xlint",
+  "-unchecked",
+  "-deprecation",
+  "-Xfatal-warnings",
+  "-Ywarn-inaccessible",
+  "-Ywarn-dead-code",
+  "-Ywarn-adapted-args",
+  "-Ywarn-nullary-unit",
+  "-feature",
+  "-Ywarn-unused",
+  "-Ywarn-unused-import",
+  "-encoding", "UTF-8"
+)
+
+val Scala213ScalacOptions = Seq(
+  "-Xlint",
+  "-unchecked",
+  "-deprecation",
+  "-Xfatal-warnings",
+  "-Ywarn-dead-code",
+  "-feature",
+  "-Ywarn-unused",
+  "-encoding", "UTF-8",
+  "-Wconf:origin=scala.collection.compat.*:s"
+)
+
+val Scala3ScalacOptions = Seq(
+  "-unchecked",
+  "-deprecation",
+  "-Werror",
+  "-feature",
+  "-encoding", "UTF-8"
+)
+
 val moduleSettings = commonSettings ++ Seq(
-  scalacOptions :=
-    (if (scala213.value)
-       Seq(
-         "-Xlint",
-         "-unchecked",
-         "-deprecation",
-         "-Xfatal-warnings",
-         "-Ywarn-dead-code",
-         "-feature",
-         "-Ywarn-unused",
-         "-encoding",
-         "UTF-8",
-         "-Wconf:origin=scala.collection.compat.*:s"
-       )
-     else
-       Seq(
-         "-Xlint",
-         "-unchecked",
-         "-deprecation",
-         "-Xfatal-warnings",
-         "-Ywarn-inaccessible",
-         "-Ywarn-dead-code",
-         "-Ywarn-adapted-args",
-         "-Ywarn-nullary-unit",
-         "-feature",
-         "-Ywarn-unused",
-         "-Ywarn-unused-import",
-         "-encoding",
-         "UTF-8"
-       )),
+  scalacOptions := (
+    if (scala3.value) Scala3ScalacOptions
+    else if (scala213.value) Scala213ScalacOptions
+    else Scala212ScalacOptions
+    ),
   libraryDependencies ++= Seq(
     "org.scalatest" %% "scalatest" % "3.2.16" % "test"
   )

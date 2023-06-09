@@ -13,8 +13,8 @@ package object collection extends StdLibDecorators with JavaAliases {
   /******************************************** deepAsJava converters ********************************************/
   implicit class DeepSeqAsJavaList[A](val scalaSeq: GenSeq[A]) extends AnyVal {
     private def toJava[T](genSeq: GenSeq[T]): JList[T] = genSeq match {
-      case buffer: MBuffer[T] => buffer.asJava
-      case mSeq: MSeq[T] => mSeq.asJava
+      case buffer: MBuffer[_] => buffer.asJava.asInstanceOf[JList[T]]
+      case mSeq: MSeq[_] => mSeq.asJava.asInstanceOf[JList[T]]
       case _ => genSeq.asJava
     }
 
@@ -104,7 +104,7 @@ package object collection extends StdLibDecorators with JavaAliases {
 
   implicit class DeepMapAsJavaMap[A, B](val scalaMap: GenMap[A, B]) extends AnyVal {
     private def toJava[T, U](genMap: GenMap[T, U]): JMap[T, U] = genMap match {
-      case mMap: MMap[T, U] => mMap.asJava
+      case mMap: MMap[_, _] => mMap.asJava.asInstanceOf[JMap[T, U]]
       case _ => genMap.asJava
     }
 
