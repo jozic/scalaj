@@ -208,12 +208,12 @@ class SimpleJConvertersTest extends ScalaJSpec {
     "return same array with self conversions" in {
       {
         val scalaArray = Array("ss")
-        scalaArray.deepAsJava should be theSameInstanceAs scalaArray
+        scalaArray.deepAsJava[String] should be theSameInstanceAs scalaArray
       }
       {
         class A
         val scalaArray = Array(new A)
-        scalaArray.deepAsJava should be theSameInstanceAs scalaArray
+        scalaArray.deepAsJava[A] should be theSameInstanceAs scalaArray
       }
     }
 

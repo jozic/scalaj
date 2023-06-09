@@ -115,20 +115,20 @@ class SimpleSConvertersTest extends ScalaJSpec with JListBuilder with JSetBuilde
     "return same array with primitives and self conversions" in {
       {
         val javaArray = Array[Int](1)
-        javaArray.deepAsScala should be theSameInstanceAs javaArray
+        javaArray.deepAsScala[Int] should be theSameInstanceAs javaArray
       }
       {
         val javaArray = Array[Char]('s')
-        javaArray.deepAsScala should be theSameInstanceAs javaArray
+        javaArray.deepAsScala[Char] should be theSameInstanceAs javaArray
       }
       {
         val javaArray = Array[Double](12d)
-        javaArray.deepAsScala should be theSameInstanceAs javaArray
+        javaArray.deepAsScala[Double] should be theSameInstanceAs javaArray
       }
       {
         class A
         val javaArray = Array[A](new A)
-        javaArray.deepAsScala should be theSameInstanceAs javaArray
+        javaArray.deepAsScala[A] should be theSameInstanceAs javaArray
       }
     }
   }
