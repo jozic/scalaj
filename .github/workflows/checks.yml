@@ -11,9 +11,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        java:
-          - graalvm-ce-java11@21
-          - zulu@1.8
+        jvm:
+          - temurin-jre:1.17.0.7
+          - graalvm-java11:22.3.2
+          - zulu:8.0.372
         os:
           - ubuntu-latest
       fail-fast: false
@@ -26,7 +27,7 @@ jobs:
       - uses: coursier/cache-action@v6
       - uses: coursier/setup-action@v1
         with:
-          java-version: ${{ matrix.java }}
+          jvm: ${{ matrix.jvm }}
       - name: Compile, test and check format, coverage
         run: "sbt -batch clean checkFormatting +test scoverage"
         shell: bash

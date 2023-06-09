@@ -53,8 +53,8 @@ val publishSettings = sonatypeSettings ++ Seq(
 
 val commonSettings = Seq(
   organization := "com.daodecode",
-  scalaVersion := "2.13.10",
-  crossScalaVersions := Seq(scalaVersion.value, "2.11.12", "2.12.17"),
+  scalaVersion := "2.13.11",
+  crossScalaVersions := Seq(scalaVersion.value, "2.11.12", "2.12.18"),
   scalafmtConfig := Some(scalaj.base / "scalafmt-config/.scalafmt.conf")
 ) ++ releaseSettings ++ crossVersionSourcesSettings
 
