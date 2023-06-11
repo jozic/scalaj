@@ -79,13 +79,13 @@ val immutableScalaBoo: Set[Option[immutable.Seq[Double]]] = boo.deepAsScalaImmut
 
 ## scalaj-collection
 
-| 2.10 | 2.11 | 2.12 | 2.13                                                                                                                                                                                                       |
-|------|------|------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.10) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.11) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.12) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.13) |
+| 2.10                                                                                                                                                                                                       | 2.11                                                                                                                                                                                                       | 2.12                                                                                                                                                                                                       | 2.13                                                                                                                                                                                                       | 3                                                                                                                                                                                                    |
+|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.10) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.11) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.12) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_2.13) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_3/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-collection_3) |
 
 ### sbt
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.3.1"
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.3.2"
 ```
 ### maven
 
@@ -103,20 +103,20 @@ set `<scala.binary.version>` property to scala version you need, like
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_${scala.binary.version}</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 </dependency>
 ```
 
 ## scalaj-googleoptional
 
-| 2.10 | 2.11 | 2.12 | 2.13                                                                                                                                                                                                                |
-|------|------|------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.10) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.11) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.12) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.13) |
+| 2.10                                                                                                                                                                                                               | 2.11                                                                                                                                                                                                               | 2.12                                                                                                                                                                                                               | 2.13                                                                                                                                                                                                               | 3                                                                                                                                                                                                            |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.10/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.10) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.11/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.11) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.12/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.12) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.13/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_2.13) | [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_3/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.daodecode/scalaj-googleoptional_3) |
 
 ### sbt
 
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.3.1"
+libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.3.2"
 ```
 ### maven
 
@@ -132,7 +132,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.3.1"
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_${scala.binary.version}</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 </dependency>
 ```
 
@@ -164,7 +164,7 @@ then add snapshot as a dependency
 ### sbt
 
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.3.2-SNAPSHOT"
+libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.3.3-SNAPSHOT"
 ```
 
 ### maven
@@ -181,7 +181,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.3.2-SNAPSHOT"
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-collection_${scala.binary.version}</artifactId>
-    <version>0.3.2-SNAPSHOT</version>
+    <version>0.3.3-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -190,7 +190,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-collection" % "0.3.2-SNAPSHOT"
 ### sbt
 
 ```scala
-libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.3.2-SNAPSHOT"
+libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.3.3-SNAPSHOT"
 ```
 ### maven
 
@@ -206,7 +206,7 @@ libraryDependencies += "com.daodecode" %% "scalaj-googleoptional" % "0.3.2-SNAPS
 <dependency>
     <groupId>com.daodecode</groupId>
     <artifactId>scalaj-googleoptional_${scala.binary.version}</artifactId>
-    <version>0.3.2-SNAPSHOT</version>
+    <version>0.3.3-SNAPSHOT</version>
 </dependency>
 ```
 
